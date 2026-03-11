@@ -1,0 +1,16 @@
+form {
+    
+}
+
+.field-group {
+    display: flex;
+    justify-content: start;
+    
+    label {
+        width: 50%;       
+    }
+    
+    input[type=text] {
+        margin-bottom: 4px;
+    }
+}

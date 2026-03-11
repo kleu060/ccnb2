@@ -1,0 +1,17 @@
+body {
+    background-color: $gray-200;
+
+    .main {
+        padding-left: $verticalNavbarWidth;
+        width: 100%;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+
+        section.container-fluid {
+            padding: 0px;
+        }
+    }
+
+    
+}

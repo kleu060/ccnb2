@@ -1,0 +1,21 @@
+// Override Bootstrap variables first
+@import "./variables";
+
+// Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Your custom styles
+@import "./icon";
+@import "./typography";
+@import "./vertical-navbar";
+@import "./color";
+@import "layout";
+@import "dataTable";
+@import "form";
+
+@import "./card";
+@import "./header";
+@import "./footer";
+@import "./main-app";
+@import "./login-section";
+@import "./debtor-information";
