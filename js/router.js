@@ -1,6 +1,6 @@
 import { Home } from "./pages/home.js";
 import { Debtor } from "./pages/debtor.js";
-import { Login } from "./pages/login.js";
+import { LoginPage } from "./pages/login.js";
 import { ChangePassword } from "./pages/change-password.js";
 import { ActiveAssignmentList } from "./pages/active-assignment-list.js";
 import { loadDebtorTable } from "./components/debtor-table.js";
@@ -9,7 +9,7 @@ import { loadActiveListAssignmentTable } from "./components/active-list-assignme
 
 const routes = {
     "/": Home,
-    "/login": Login,
+    "/login": LoginPage,
     "/change-password": ChangePassword,
     "/debtor": Debtor,
     "/active-assignment-list": ActiveAssignmentList,
