@@ -34,10 +34,10 @@ curl_close($ch);
 
 $result = json_decode($response, true);
 
-// if (isset($result['access_token'])) {
-if ( true ) {
-    // $_SESSION['access_token'] = $result['access_token'];
-    $_SESSION['access_token'] = rand(1000, 9999);
+if (isset($result['access_token'])) {
+// if ( true ) {
+    $_SESSION['access_token'] = $result['access_token'];
+    // $_SESSION['access_token'] = rand(1000, 9999);
 
     echo json_encode([
         "success" => true
