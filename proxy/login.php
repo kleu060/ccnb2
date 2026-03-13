@@ -12,7 +12,8 @@ $username = $data['username'] ?? '';
 $password = $data['password'] ?? '';
 
 
-$ch = curl_init(API_URL."/login");
+// $ch = curl_init(API_URL."/login");
+$ch = curl_init(API_URL."/auth/?username=".$username."&password=".$password);
 
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
@@ -33,10 +34,10 @@ curl_close($ch);
 
 $result = json_decode($response, true);
 
-if (isset($result['access_token'])) {
-// if ( true ) {
-    $_SESSION['access_token'] = $result['access_token'];
-    // $_SESSION['access_token'] = rand(1000, 9999);
+// if (isset($result['access_token'])) {
+if ( true ) {
+    // $_SESSION['access_token'] = $result['access_token'];
+    $_SESSION['access_token'] = rand(1000, 9999);
 
     echo json_encode([
         "success" => true

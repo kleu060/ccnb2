@@ -3,7 +3,6 @@
 include_once('config.php');
 require_once "../lib/auth.php";
 require_once "../lib/ProxyClient.php";
-echo $token;
 $endpoint = $_GET['endpoint'] ?? '';
 
 $client = new ProxyClient();
@@ -23,6 +22,10 @@ switch ($endpoint) {
     case "subscribers":
 
         echo $client->get("/subscribers", $token);
+        break;
+
+    case "logout":
+        echo $client->get("/logout", $token);
         break;
 
     default:

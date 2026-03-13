@@ -12,6 +12,12 @@ export function renderVerticalNavBar() {
                     <span class="icon icon-list bg-white"></span>
                 </a>
             </li>
+
+            <li id="menu-item-logout">
+                <a href="logout">
+                    <span class="icon icon-logout bg-white"></span>
+                </a>
+            </li>
         </ul>
     `;
 }

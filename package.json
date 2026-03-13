@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && npm run copy-extra",
-    "copy-extra": "cpx \"lib/**/*\" dist/lib && cpx \"proxy/**/*\" dist/proxy",
+    "copy-extra": "cpx \"lib/**/*\" dist/lib && cpx \"proxy/**/*\" dist/proxy && cpx .htaccess dist/.htaccess",
     "preview": "vite preview"
   },
   "keywords": [],

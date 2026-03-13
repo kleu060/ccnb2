@@ -1,6 +1,7 @@
 import { Home } from "./pages/home.js";
 import { Debtor } from "./pages/debtor.js";
 import { LoginPage } from "./pages/login.js";
+import { LogoutPage } from "./pages/logout.js";
 import { ChangePassword } from "./pages/change-password.js";
 import { ActiveAssignmentList } from "./pages/active-assignment-list.js";
 import { loadDebtorTable } from "./components/debtor-table.js";
@@ -13,6 +14,7 @@ const routes = {
     "/change-password": ChangePassword,
     "/debtor": Debtor,
     "/active-assignment-list": ActiveAssignmentList,
+    "/logout": LogoutPage,
 };
 
 export async function router() {

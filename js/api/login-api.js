@@ -11,7 +11,8 @@ export async function login() {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
+        credentials: "include"
     });
 
     return await res.json();

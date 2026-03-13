@@ -8,7 +8,6 @@ class ProxyClient {
 
     public function get($endpoint, $token) {
         $ch = curl_init($this->baseUrl .'/'. $endpoint);
-
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => [
@@ -17,7 +16,6 @@ class ProxyClient {
         ]);
 
         $response = curl_exec($ch);
-
         curl_close($ch);
 
         return $response;
