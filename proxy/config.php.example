@@ -1,6 +1,7 @@
 <?php
     // Allow requests from your Vite dev server
     header("Access-Control-Allow-Origin: http://ccnb2.test:5173");
+    header("Access-Control-Allow-Credentials: true");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
     
