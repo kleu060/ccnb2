@@ -1,4 +1,4 @@
-import { getDebtor, getDebtorActionHistory } from "../api//debtor-api.js";
+import { getDebtor, getDebtorActionHistory } from "../api/debtor-api.js";
 
 export async function Debtor() {
     const debtor = await getDebtor();

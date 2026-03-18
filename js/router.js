@@ -9,7 +9,7 @@ import { loadActiveListAssignmentTable } from "./components/active-list-assignme
 
 
 const routes = {
-    "/": Home,
+    "/": LoginPage,
     "/login": LoginPage,
     "/change-password": ChangePassword,
     "/debtor": Debtor,
@@ -38,8 +38,8 @@ export async function router() {
         });
         loadDebtorTable(document.getElementById("choices").value);
     }
-    else if ( path == "/active-assignment-list" ){
-        loadActiveListAssignmentTable();
-    }
+    // else if ( path == "/active-assignment-list" ){
+    //     loadActiveListAssignmentTable();
+    // }
 
 }

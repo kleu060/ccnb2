@@ -12,8 +12,11 @@ $username = $data['username'] ?? '';
 $password = $data['password'] ?? '';
 
 
-// $ch = curl_init(API_URL."/login");
-$ch = curl_init(API_URL."/auth/?username=".$username."&password=".$password);
+$ch = curl_init(API_URL."/login");
+$url = API_URL."/auth/?username=".$username."&password=".$password;
+$ch = curl_init($url);
+// echo $url; exit();
+
 
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
@@ -48,7 +51,7 @@ if (isset($result['access_token'])) {
     http_response_code(401);
     echo json_encode([
         "success" => false,
-        "error_code" => $response["error_code"] ?? "",
-        "error_description" => $response["error_description"] ?? ""
+        "error_code" => $result["error_code"] ?? "",
+        "error_description" => $result["error_description"] ?? ""
     ]);
 }

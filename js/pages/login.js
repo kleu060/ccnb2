@@ -14,6 +14,7 @@ export async function LoginPage() {
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password"/>
                         </div>
+                        <div id="error-message" class="mb-3 error-message"></div>
                         <div class="field-group">
                             <button class="btn btn-primary" type="submit">Login</button>
                         </div>
@@ -26,29 +27,28 @@ export async function LoginPage() {
     // Wait for DOM to render the form
     setTimeout(() => {
         const loginForm = document.getElementById("login-form");
+        const errorMessage = document.getElementById("error-message");
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault(); // prevent page reload
             const result = await login();
             try {
                 const result = await login();
 
-                // If PHP returned HTTP 401, fetch won’t throw, so we check result
-                if (result && result.error && result.error === "Unauthorized") {
-                    alert("Unauthorized: Invalid username or password.");
-                    return;
-                }
+                console.log(result);
 
-                if (result.success) {
+
+                if ( result.success) {
                     // login successful
                     window.location = "/change-password";
                 } else {
-                    alert("Login failed: " + (result.message || "Unknown error"));
+                    errorMessage.textContent = "Invalid username or password.";
+                    return;                
                 }
 
             } catch (err) {
                 // Network errors, CORS issues, or server errors
                 console.error("Login error:", err);
-                alert("Login failed due to server error.");
+                errorMessage.textContent = "Login failed due to server error.";
             }
         });
     }, 0);

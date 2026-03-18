@@ -4,7 +4,6 @@ include_once('config.php');
 require_once "../lib/auth.php";
 require_once "../lib/ProxyClient.php";
 $endpoint = $_GET['endpoint'] ?? '';
-
 $client = new ProxyClient();
 
 switch ($endpoint) {
@@ -24,8 +23,30 @@ switch ($endpoint) {
         echo $client->get("/subscribers", $token);
         break;
 
+    case "accinq_2001":
+
+        $data = [
+            "account_code" => $_GET["account_code"],
+            "customer_name" => $_GET["customer_name"],
+            "accounid_numbert_code" => $_GET["id_number"],
+            "msisdn" => $_GET["msisdn"],
+            "invoice_number" => $_GET["invoice_number"],
+            "iccid" => $_GET["iccid"],
+        ];
+
+        echo $client->get("/accinq_2001/", $token, $data);
+        // echo "here";
+        break;
+
     case "logout":
-        echo $client->get("/logout", $token);
+        $response = $client->get("/logout/", $token);
+	    $responseDecode = json_decode($response, true);
+
+        if ($responseDecode["error_code"] == 0) {
+            unset($_SESSION["access_token"]);
+        }
+
+	echo $response;
         break;
 
     default:
