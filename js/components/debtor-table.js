@@ -51,7 +51,7 @@ const columnsConfig = {
 };
 
 // Mock API fetch for demonstration
-async function fetchData(type) {
+async function fetchData(type, accountNo) {
     await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
     return mockData[type] || [];
 }

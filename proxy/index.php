@@ -9,7 +9,6 @@ $client = new ProxyClient();
 switch ($endpoint) {
 
     case "invoices":
-
         echo $client->get("/invoices", $token);
         break;
 

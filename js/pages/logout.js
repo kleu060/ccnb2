@@ -14,7 +14,7 @@ export async function LogoutPage() {
         const result= await response.json();
         if (result.error_code == 0) {
             // login successful
-            msg= "Logou success.  Redirect to login page...";
+            msg= "Logout success.  Redirect to login page...";
 
         } 
         else {

@@ -1,6 +1,6 @@
 import DataTable from "datatables.net-bs5";
 import "datatables.net-bs5/css/dataTables.bootstrap5.css";
-import { activeListAssignmentMockData } from "./mockData.js";
+// import { activeListAssignmentMockData } from "./mockData.js";
 import { API_BASE } from '../config.js';
 
 // Keep reference to your DataTable
@@ -11,7 +11,16 @@ const columnsConfig = {
     activeListAssignment: [
         { title: "Customer name", data: "customer_name" },
         { title: "ID Number", data: "id_number" },
-        { title: "Account Code", data: "account_code" },
+        {
+            title: "Account Code",
+            data: "account_code",
+            render: function(data, type, row, meta) {
+                if (type === 'display') {
+                    return `<a href="/account-code-search?account_code=${encodeURIComponent(data)}">${data}</a>`;
+                }
+                return data;
+            }
+        },
         { title: "MSISDN", data: "msisdn" },
         { title: "Invoice Number", data: "invoice_number" },
         { title: "ICCID", data: "iccid" },
@@ -20,7 +29,6 @@ const columnsConfig = {
 
 // Mock API fetch for demonstration
 async function fetchData(formData) {
-    console.log("active-list-assignment-table fetch");
     const queryString = new URLSearchParams(formData).toString();
     const response= await fetch(`${API_BASE}/index.php?endpoint=accinq_2001&${queryString}`, {
         method: "GET",
@@ -36,7 +44,7 @@ async function fetchData(formData) {
 }
 
 // Initialize or rebuild DataTable
-export async function loadActiveListAssignmentTable(formData) {
+export async function loadInquiryTable(formData) {
     const activeListAssignmentData = await fetchData(formData);
 
     if (activeAssignmentListTable) {
@@ -46,11 +54,18 @@ export async function loadActiveListAssignmentTable(formData) {
     }
 
     // Create Adjustable DataTable
-    console.log(activeListAssignmentData);
+    let errorMsg = "No record found";
+    if ( !activeListAssignmentData.success) {
+        errorMsg = activeListAssignmentData.error_description
+    } 
+    
     activeAssignmentListTable = new DataTable("#active-assignment-list-table", {
-        data: activeListAssignmentData,
-        columns: columnsConfig["activeListAssignment"],
-        searching: false,
-    });
+            data: activeListAssignmentData,
+            columns: columnsConfig["activeListAssignment"],
+            searching: false,
+            language: {
+                emptyTable: errorMsg
+            }
+        });
 
 }

@@ -36,17 +36,29 @@ class ProxyClient {
 
         $response = curl_exec($ch);
 
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         rewind($verbose);
         $verboseLog = stream_get_contents($verbose);
         // echo "verboseLog: " . $verboseLog;
 
         if (curl_errno($ch)) {
-            echo curl_error($ch);
-            $response = [ 
+            $response = [
                 "success" => false,
                 "error_code" => "99",
-                "error_description" => "Unknown error". curl_error($ch)
-                ];
+                "error_description" => "Unknown error: " . curl_error($ch) . ". Please contact administrator."
+            ];
+            curl_close($ch);
+            return json_encode($response);
+        }
+
+        if ($httpCode >= 400) {
+            $response = [
+                "success" => false,
+                "error_code" => $httpCode,
+                "error_description" => "HTTP error: ".$httpCode.". Please contact administrator." 
+            ];
+            curl_close($ch);
             return json_encode($response);
         }
 
@@ -70,10 +82,29 @@ class ProxyClient {
         ]);
 
         $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
+        if (curl_errno($ch)) {
+            $response = [
+                "success" => false,
+                "error_code" => "99",
+                "error_description" => "Unknown error: " . curl_error($ch)
+            ];
+            curl_close($ch);
+            return json_encode($response);
+        }
+
+        if ($httpCode >= 400) {
+            $response = [
+                "success" => false,
+                "error_code" => $httpCode,
+                "error_description" => "HTTP error: $httpCode"
+            ];
+            curl_close($ch);
+            return json_encode($response);
+        }
 
         curl_close($ch);
-
         return $response;
     }
 }

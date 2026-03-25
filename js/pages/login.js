@@ -16,7 +16,7 @@ export async function LoginPage() {
                         </div>
                         <div id="error-message" class="mb-3 error-message"></div>
                         <div class="field-group">
-                            <button class="btn btn-primary" type="submit">Login</button>
+                            <button class="btn btn-primary" type="submit" >Login</button>
                         </div>
                     </form>
                 </div>
@@ -31,22 +31,28 @@ export async function LoginPage() {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault(); // prevent page reload
             const result = await login();
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Logging in...";
+
             try {
                 const result = await login();
 
-                console.log(result);
-
-
                 if ( result.success) {
                     // login successful
-                    window.location = "/change-password";
+                    window.location = "/active-assignment-list";
                 } else {
                     errorMessage.textContent = "Invalid username or password.";
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "Login";
                     return;                
                 }
 
             } catch (err) {
                 // Network errors, CORS issues, or server errors
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Login";
                 console.error("Login error:", err);
                 errorMessage.textContent = "Login failed due to server error.";
             }

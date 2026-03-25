@@ -1,4 +1,4 @@
-export async function getDebtor() {
+export async function getAccount(accountNo) {
     // const res = await fetch("https://fakestoreapi.com/debtor");
     // return await res.json();
 
@@ -35,7 +35,7 @@ export async function getDebtor() {
 }
 
 
-export async function getDebtorActionHistory() {
+export async function getAccountActionHistory(accountNo) {
     // simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
 
