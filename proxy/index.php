@@ -41,9 +41,9 @@ switch ($endpoint) {
         $response = $client->get("/logout/", $token);
 	    $responseDecode = json_decode($response, true);
 
-        if ($responseDecode["error_code"] == 0) {
+        // if ($responseDecode["error_code"] == 0) {
             unset($_SESSION["access_token"]);
-        }
+        // }
 
 	echo $response;
         break;

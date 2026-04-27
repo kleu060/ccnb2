@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Blacklist inquiry Print Page</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="d-flex">
+        
+        <div class="main">
+            <div id="header"></div>
+            <main id="main-app">
+
+                <div class="mb-2">Requested on <span class="today-date"></span></div>
+                
+                <div class="border">
+                    <table class="table" style="width: fit-content;">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Blacklist Status</th>
+                                <td>ID blacklisted</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Blacklist Reason</th>
+                                <td>(3)deceased</td>
+                            </tr> 
+                            <tr>
+                                <th scope="row">Account Number</th>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">blacklisted on</th>
+                                <td>2026-01-02</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <div id="footer"></div>
+
+
+    </div>
+
+    <script type="module" src="/js/app.js"></script>
+</body>
+<script>
+    // Display today's date in .today-date span
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const formatted = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        const dateSpans = document.querySelectorAll('.today-date');
+        dateSpans.forEach(span => span.textContent = formatted);
+    });
+</script>
+</body>
+</html>
+
+
+
+

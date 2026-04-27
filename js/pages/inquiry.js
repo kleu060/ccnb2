@@ -21,7 +21,7 @@ export async function Inquiry() {
                         <div class="card-body" >
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <h4>Active Assignment List</h4>
+                                    <h4>Account Search</h4>
                                 </div>
                             </div>
                             <div class="row justify-content-start">

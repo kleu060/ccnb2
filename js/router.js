@@ -1,3 +1,6 @@
+import { isLogin } from "./auth/auth.js";
+
+
 import { Home } from "./pages/home.js";
 import { LoginPage } from "./pages/login.js";
 import { LogoutPage } from "./pages/logout.js";
@@ -7,6 +10,7 @@ import { CustomerSearch } from "./pages/customer.js";
 import { AccountCodeMain } from "./pages/accountCodeMain.js";
 import { KeyAccount } from "./pages/keyAccount.js";
 import { BlackListMain } from "./pages/blacklistMain.js";
+import { DunningGroupMain } from "./pages/dunningGrouptMain.js";
 import { DcaMain } from "./pages/DcaMain.js";
 import { DcaAgencyMain } from "./pages/DcaAgencyMain.js";
 import { Nod } from "./pages/Nod.js";
@@ -18,6 +22,10 @@ import { AdminMain } from "./pages/AdminMain.js";
 
 
 import { loadDebtorTable } from "./components/debtor-table.js";
+import { loadCustomerTable } from "./components/customer-table.js";
+import { loadBlacklistTable } from "./components/blacklist-inquiry-table.js";
+import { loadCtosTable } from "./components/ctos-table.js";
+import { loadInternalBlacklistTable } from "./components/internal-blacklist-table.js";
 
 
 const routes = {
@@ -28,6 +36,7 @@ const routes = {
     "/account-code-search": AccountCodeMain,
     "/key-account": KeyAccount,
     "/blacklist": BlackListMain,
+    "/dunning-group": DunningGroupMain,
     "/dca": DcaMain,
     "/dca-agency": DcaAgencyMain,
     "/nod": Nod,
@@ -40,7 +49,18 @@ const routes = {
 };
 
 export async function router() {
+
     const path = window.location.pathname;
+
+    // check Auth if not in login page
+    if ( path != "/" && path != "/login" ) {
+        const loggedIn = await isLogin();
+        console.log("is login: " + loggedIn);
+        if ( !loggedIn ) {
+            window.location.href = "/"
+        }
+    }
+
     const route = routes[path] || Home;
 
     const content = await route();
@@ -50,7 +70,7 @@ export async function router() {
 
     Alpine.initTree(app); // 🔥 Important line
 
-    // import DataTable
+
 
     // Event listener
     if ( path == "/account-code-search" ){
@@ -61,6 +81,14 @@ export async function router() {
             loadDebtorTable(e.target.value, accountNo);
         });
         loadDebtorTable(document.getElementById("choices").value, accountNo);
+    }
+    else if ( path == "/customer-search" ){
+        loadCustomerTable();
+    }
+    else if ( path == "/blacklist" ){
+        loadBlacklistTable();
+        loadCtosTable();
+        loadInternalBlacklistTable();
     }
 
 

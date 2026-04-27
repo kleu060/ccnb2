@@ -13,10 +13,15 @@ export async function renderAccountTab( accountNo, account, actions ) {
         <div class="tab-pane fade show active" id="account-tab" role="tabpanel" aria-labelledby="account-tab">
             <section class="container-fluid debtor-information">
                 <div class="row">
-                    <div class="col">
+                    <div class="col-4">
                         <label>Account No</label>
                         <input type="text" name="account_no" id="account_no" value="${accountNo}"></input>
-                        <button type="button" id="btn-submit" class="btn btn-primary">Submit</button>
+                        <button type="button" id="btn-submit" class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="col-4">
+                        <label>Account ID</label>
+                        <input type="text" name="account_id" id="account_id" value=""></input>
+                        <button type="button" id="btn-submit" class="btn btn-primary">Search</button>
                     </div>
                 </div>
                 <div class="row">
@@ -29,13 +34,8 @@ export async function renderAccountTab( accountNo, account, actions ) {
                                             <h4 class=""><span x-text="account.name"></span>(<span x-text="account.id"></span>)</h4>
                                         </div>
                                     </div>
+                                    
                                     <div class="row">
-                                        <div class="col-4">
-                                            <div class="field-group justify-content-start ">
-                                                <label class="me-3">Customer ID</label>
-                                                <span  x-text="account.customer_id"></span>
-                                            </div>
-                                        </div>
                                         <div class="col-4">
                                             <div class="field-group justify-content-start">
                                                 <label class="me-3">Customer Code</label>
@@ -43,14 +43,51 @@ export async function renderAccountTab( accountNo, account, actions ) {
                                             </div>
                                         </div>
                                         <div class="col-4">
+                                            <div class="field-group justify-content-start ">
+                                                <label class="me-3">Customer ID</label>
+                                                <span  x-text="account.customer_id"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-4">
                                             <div class="field-group justify-content-start">
                                                 <label class="me-3">Account ID</label>
                                                 <span  x-text="account.account_id"></span>
                                             </div>
+                                            <div class="field-group justify-content-start">
+                                                <label class="me-3">Parent Account ID</label>
+                                                <span  x-text="account.parent_account_id"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <hr />
+
+
                                     <div class="row row-cols-2 row-cols-lg-4">
+                                        <div class="col-4">
+                                            <div class="field-group">
+                                                <label class="">Status</label>
+                                                <span  x-text="account.status"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="field-group">
+                                                <label class="">Status Date</label>
+                                                <span  x-text="account.status_date"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="field-group">
+                                                <label class="">Acct Create Date</label>
+                                                <span  x-text="account.account_create_date"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="field-group">
+                                                <label class="">Writeoff</label>
+                                                <span  x-text="account.write_off"></span>
+                                            </div>
+                                        </div>
                                         <div class="col">
                                             <div class="field-group">
                                                 <label class="">Over Due</label>
@@ -148,6 +185,13 @@ export async function renderAccountTab( accountNo, account, actions ) {
 
                                         <div class="col">
                                             <div class="field-group">
+                                                <label class="">BIG</label>
+                                                <span  x-text="account.big"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
                                                 <label class="">Credit Score</label>
                                                 <span  x-text="account.credit_score"></span>
                                             </div>
@@ -155,8 +199,26 @@ export async function renderAccountTab( accountNo, account, actions ) {
 
                                         <div class="col">
                                             <div class="field-group">
+                                                <label class="">Credit balnce</label>
+                                                <span  x-text="account.credit_balance"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="row row-cols-2 row-cols-lg-4">    
+                                        <div class="col">
+                                            <div class="field-group">
                                                 <label class="">Assigned to</label>
                                                 <span  x-text="account.assigned_to"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Campaign</label>
+                                                <span  x-text="account.campaign"></span>
                                             </div>
                                         </div>
 
@@ -169,6 +231,13 @@ export async function renderAccountTab( accountNo, account, actions ) {
 
                                         <div class="col">
                                             <div class="field-group">
+                                                <label class="">PTP</label>
+                                                <span  x-text="account.ptp"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
                                                 <label class="">Current DCA</label>
                                                 <span  x-text="account.current_dca"></span>
                                             </div>
@@ -176,16 +245,86 @@ export async function renderAccountTab( accountNo, account, actions ) {
 
                                         <div class="col">
                                             <div class="field-group">
-                                                <label class="">from</label>
-                                                <span  x-text="account.from"></span>
+                                                <label class="">DCA Batch</label>
+                                                <span  x-text="account.dca_batch"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Start Date</label>
+                                                <span  x-text="account.start_date"></span>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="field-group">
-                                                <label class="">to</label>
-                                                <span  x-text="account.to"></span>
+                                                <label class="">End Date</label>
+                                                <span  x-text="account.end_date"></span>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="row row-cols-2 row-cols-lg-4">    
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Write Off Date</label>
+                                                <span  x-text="account.write_off_date"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Last SUSP Date</label>
+                                                <span  x-text="account.last_susp_date"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Termination Date</label>
+                                                <span  x-text="account.termination_date"></span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <div class="row row-cols-2 row-cols-lg-3">
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Update disposition</label>
+                                                <select name="sel-update-disposition" id="sel-update-disposition">
+                                                    <option value="option1">Option 1</option>
+                                                    <option value="option2">Option 2</option>
+                                                    <option value="option3">Option 3</option>
+                                                </select>
+                                                <button type="button" name="submit-update-disposition">Update</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Sched Call back</label>
+                                                <input type="datetime-local" name="input-sched-call-back" id="input-sched-call-back"/>
+                                                <button type="button" name="submit-sched-call-back">Update</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col">
+                                            <div class="field-group">
+                                                <label class="">Contact Type</label>
+                                                <select name="select-contact-type" id="select-contact-type">
+                                                    <option value="mobile">Mobile</option>
+                                                    <option value="phone">Phone</option>
+                                                    <option value="email">E-mail</option>
+                                                </select>
+                                                <button type="button" name="submit-contact-type">Add</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 

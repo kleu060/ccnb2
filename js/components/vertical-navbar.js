@@ -6,7 +6,7 @@ export async function renderVerticalNavBar() {
     let html = '<ul>';
     if ( loggedIn ) {
         html += `
-            <li id="menu-item-inquiry" data-bs-toggle="tooltip" data-bs-placement="right" title="Inquiry">
+            <li id="menu-item-inquiry" data-bs-toggle="tooltip" data-bs-placement="right" title="Account Search">
                 <a href="/inquiry">
                     <span class="icon icon-inquiry bg-white"></span>
                 </a>
@@ -31,21 +31,23 @@ export async function renderVerticalNavBar() {
                 </a>
             </li>
 
+
+
             <li id="menu-item-blacklist" data-bs-toggle="tooltip" data-bs-placement="right" title="Blacklist">
                 <a href="/blacklist">
                     <span class="icon icon-blacklist bg-white"></span>
                 </a>
             </li>
 
-            <li id="menu-item-dca" data-bs-toggle="tooltip" data-bs-placement="right" title="DCA">
-                <a href="/dca">
-                    <span class="icon icon-dca bg-white"></span>
+            <li id="menu-item-dunning-group" data-bs-toggle="tooltip" data-bs-placement="right" title="Dunning Group">
+                <a href="/dunning-group">
+                    <span class="icon icon-dunning-group bg-white"></span>
                 </a>
             </li>
 
-            <li id="menu-item-dca-agency" data-bs-toggle="tooltip" data-bs-placement="right" title="DCA Agency">
-                <a href="/dca-agency">
-                    <span class="icon icon-dca-agency bg-white"></span>
+            <li id="menu-item-dca" data-bs-toggle="tooltip" data-bs-placement="right" title="DCA">
+                <a href="/dca">
+                    <span class="icon icon-dca bg-white"></span>
                 </a>
             </li>
 

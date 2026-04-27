@@ -10,13 +10,22 @@ include_once('config.php');
 $data = json_decode(file_get_contents("php://input"), true);
 $username = $data['username'] ?? '';
 $password = $data['password'] ?? '';
+$checkedAgreeLegalNotice = $data['chk-agree-legal-notice'] ?? '';
+
+if ( $checkedAgreeLegalNotice != "agree" ) {
+   echo json_encode([
+        "success" => false,
+        "error_code" => 50,
+        "error_description" => "You did not agree no legal term"
+    ]); 
+    return;
+}
 
 
 $ch = curl_init(API_URL."/login");
 $url = API_URL."/auth/?username=".$username."&password=".$password;
 $ch = curl_init($url);
 // echo $url; exit();
-
 
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
@@ -29,12 +38,11 @@ curl_setopt_array($ch, [
         "password" => $password
     ])
 ]);
-$response = curl_exec($ch);
-curl_close($ch);
+
+
 
 $response = curl_exec($ch);
 curl_close($ch);
-
 $result = json_decode($response, true);
 
 if (isset($result['access_token'])) {
@@ -51,7 +59,7 @@ if (isset($result['access_token'])) {
     http_response_code(401);
     echo json_encode([
         "success" => false,
-        "error_code" => $result["error_code"] ?? "",
-        "error_description" => $result["error_description"] ?? ""
+        "error_code" => $result["error_code"] ?? "98",
+        "error_description" => $result["error_description"] ?? "API server not responding"
     ]);
 }

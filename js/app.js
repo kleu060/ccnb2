@@ -17,6 +17,8 @@ import { router } from "./router.js";
 import { API_BASE } from './config.js';
 
 
+/* import functions */
+import './de-BlackListMain.js';
 
 document.getElementById("header").innerHTML = renderHeader();
 document.getElementById("footer").innerHTML = renderFooter();

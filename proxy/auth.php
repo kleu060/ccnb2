@@ -13,6 +13,7 @@ if (!isset($_SESSION['access_token'])) {
 }
 
 echo json_encode([
-    "isLogin" => true
+    "isLogin" => true,
+    "session" => $_SESSION['access_token']
 ]);
 exit;

@@ -12,10 +12,16 @@ let adjustmentTable = null;
 const columnsConfig = {
     subscriber: [
         { title: "Subscriber ID", data: "subscriber_id" },
-        { title: "Class", data: "class" },  // formal or test
+        { title: "Account ID", data: "account_id" },
+        { title: "Activation Date", data: "activation_date" },
         { title: "Status", data: "status" }, // 2= Active, 9 = Deactivation
-        { title: "Status Reason", data: "status_reason" },
-        { title: "Activation Date", data: "activation_date" }
+        { title: "Status Reason", data: "status_reason" }, // 2= Active, 9 = Deactivation
+        { title: "Status Date", data: "status_date" },
+        { title: "MSISND", data: "msisdn" },
+        { title: "IMSI", data: "imsi" },
+        { title: "NAI", data: "nai" },
+        { title: "Fixed-line No.", data: "fixed_line_no" },
+        { title: "ICCID", data: "iccid" },
     ],
     dca: [
         { title: "Agency", data: "agency" },
@@ -34,19 +40,19 @@ const columnsConfig = {
     ],
     payment: [
         { title: "Payment Id", data: "payment_id" },
+        { title: "Payment Date", data: "payment_date" },
+        { title: "Amount", data: "amount" },
         { title: "Payment Method", data: "payment_method" },
-        { title: "Pay Time", data: "pay_time" },
-        { title: "Pay Reversal ID", data: "pay_reversal_id" },
-        { title: "Reversal Time", data: "reversal_time" },
-        { title: "Status", data: "status" } // Payment, Pay Reversal, Adjustment, Adjust Reversal
+        { title: "Status", data: "status" }, // Payment, Pay Reversal, Adjustment, Adjust Reversal
+        { title: "Reversal Date", data: "reversal_date" },
+        { title: "Reversal Reason", data: "reversal_reason" },
     ],
     adjustment: [
         { title: "Adjustment Id", data: "adjustment_id" },
-        { title: "Payment Method", data: "payment_method" },
-        { title: "Adj Time", data: "adj_time" },
-        { title: "Adj Reversal ID", data: "adj_reversal_id" },
-        { title: "Reversal Time", data: "reversal_time" },
-        { title: "Status", data: "status" } // Payment, Pay Reversal, Adjustment, Adjust Reversal
+        { title: "Adjust Date", data: "adjust_date" },
+        { title: "Amount", data: "amount" },
+        { title: "Status", data: "status" }, // Payment, Pay Reversal, Adjustment, Adjust Reversal
+        { title: "Reversal Date", data: "reversal_date" },
     ]
 };
 
