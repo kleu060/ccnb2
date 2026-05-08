@@ -1,0 +1,13 @@
+.form-response {
+    display: none;
+
+    &.invalid {
+        display: block;
+        color: $red;
+    }
+
+    &.valid {
+        display: block;
+        color: $blue;
+    }
+}

@@ -1,4 +1,3 @@
-// import alpine
 import Alpine from 'alpinejs'
 
 window.Alpine = Alpine
@@ -18,11 +17,15 @@ import { API_BASE } from './config.js';
 
 
 /* import functions */
-import './de-BlackListMain.js';
-
-document.getElementById("header").innerHTML = renderHeader();
+const header =  document.getElementById("header");
+if ( header ) {
+    header.innerHTML = renderHeader();
+}
 document.getElementById("footer").innerHTML = renderFooter();
-document.getElementById("vertical-navbar").innerHTML = await renderVerticalNavBar();
+const verticalNavBar = document.getElementById("vertical-navbar");
+if (verticalNavBar) {
+    verticalNavBar.innerHTML = await renderVerticalNavBar();
+}
 
 const id = 'menu-item-' + window.location.pathname.replace('/', '');
 document.getElementById(id)?.classList.add('active');

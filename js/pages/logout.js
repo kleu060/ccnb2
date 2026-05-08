@@ -1,4 +1,4 @@
-import { API_BASE } from '../config.js';
+import { APP_ROOT, API_BASE } from '../config.js';
 
 
 export async function LogoutPage() {
@@ -18,20 +18,21 @@ export async function LogoutPage() {
 
         } 
         else {
-            msg = "Login failed: " + (result.description|| "Unknown error") + ". Redirect to login page...";	
+            msg = "Logout... " + (result.description|| "Unknown error") + ". Redirect to login page...";	
             console.log(document.getElementById("main-app"));
 
         }
 
     } catch (err) { //Not Authenticated
         console.error("Logout failed", err);
-        msg = "Logout failed.  Redirect to login page...";
+        msg = "Logout success .  Redirect to login page...";
         
     }
     
     // Trigger the redirect after 2 seconds so the user can read the message
     setTimeout(() => {
-        window.location.href = "/login";
+        
+        window.location.href = "${APP_ROOT}/login";
     }, 2000);
 
     return msg;

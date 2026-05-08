@@ -24,7 +24,7 @@ const columnsConfig = {
         { title: "MSISDN", data: "msisdn" },
         { title: "Invoice Number", data: "invoice_number" },
         { title: "ICCID", data: "iccid" },
-    ],
+    ]
 };
 
 // Mock API fetch for demonstration
@@ -38,14 +38,14 @@ async function fetchData(formData) {
         // body: JSON.stringify(formData),
         credentials: "include"
     });
-
-
     return response.json();
 }
 
 // Initialize or rebuild DataTable
 export async function loadInquiryTable(formData) {
     const activeListAssignmentData = await fetchData(formData);
+
+    console.log(activeListAssignmentData);
 
     if (activeAssignmentListTable) {
         activeAssignmentListTable.destroy();
@@ -58,9 +58,8 @@ export async function loadInquiryTable(formData) {
     if ( !activeListAssignmentData.success) {
         errorMsg = activeListAssignmentData.error_description
     } 
-    
     activeAssignmentListTable = new DataTable("#active-assignment-list-table", {
-            data: activeListAssignmentData,
+            data: activeListAssignmentData.response,
             columns: columnsConfig["activeListAssignment"],
             searching: false,
             language: {

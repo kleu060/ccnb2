@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-    // base: '/ccnb2/',
+    base: '/ccnb2/',
     server: {
         //host: 'ccnb2.test',   // your APP_URL domain
-        host: true,   // your APP_URL domain
+        host: '0.0.0.0',  
         port: 5173,
-        strictPort: true
+        strictPort: true,
     },
     css: {
         devSourcemap: true

@@ -5,57 +5,90 @@
     <title>Blacklist check</title>
 
     <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body {
+            font-size: 1.5em !important;
+        }
+    </style>
 </head>
 <body>
     <div class="d-flex">
         
         <div class="main">
-            <div id="header"></div>
+            <div>
+                <header class="d-flex align-items-center">
+                    <a class="logo me-3" href="/" data-link><img src="img/celcomdigi_logo.png" /></a>
+                    <h1>Blacklist check</h1>
+                </header>
+            </div>
             <main id="main-app">
 
                 <div class="mb-2">Requested on <span class="today-date"></span></div>
             
-                <table class="table" style="width: fit-content;">
+                <table class="table print-table" style="width: fit-content;">
                     <tr>
                         <th scope="row">ID Number</th>
-                        <td>820112345678</td>
+                        <td id="td-id-number"></td>
                     </tr>
                     <tr>
                         <th scope="row">ID Type</th>
-                        <td>New IC</td>
+                        <td id="td-id-type"></td>
                     </tr> 
                     <tr>
                         <th scope="row">Blacklist Status</th>
-                        <td>Blacklisted</td>
+                        <td id="td-blacklist-status"></td>
                     </tr>
                     <tr>
                         <th scope="row">Blacklist Reason</th>
-                        <td>Account blacklisted</td>
+                        <td id="td-blacklist-reason"></td>
                     </tr>
                     <tr>
                         <th scope="row">Account Number</th>
-                        <td>31230011</td>
+                        <td id="td-account-number"></td>
                     </tr>
                     <tr>
-                        <td>Blacklisted On</td>
-                        <td>Dec 22 2025</td>
+                        <th scope="row">Blacklisted On</th>
+                        <td id="td-blacklisted-on"></td>
                     </tr>
                 </table>
             </main>
-
         </div>
-
     </div>
+ 
+    <script type="module" src="js/print_app.js"></script>
+    <script>
+     // Display today's date in .today-date span
+     document.addEventListener('DOMContentLoaded', function() {
+         const today = new Date();
+         const formatted = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+         const dateSpans = document.querySelectorAll('.today-date');
+         dateSpans.forEach(span => span.textContent = formatted);
+ 
+        function maskIdNumber(id) {
+            const s = String(id || '');
+            if (s.length <= 5) return 'x'.repeat(s.length); // mask all if shorter or equal to 5
+            return 'x'.repeat(5) + s.slice(5); // always mask first 5 characters
+        }
+ 
+         const params = new URLSearchParams(window.location.search);
+         const idType = params.get('idType') || '';
+         const idNumber = params.get('idNumber') || '';
+         const acctBlacklist = params.get('acctBlacklist') || '';
+        //  const acctId = params.get('acctId') || '';
+         const statusDate = params.get('statusDate') || '';
+         const accountNumber = params.get('accountNumber') || '';
 
-    <script type="module" src="/js/app.js"></script>
-</body>
-<script>
-    // Display today's date in .today-date span
-    document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date();
-        const formatted = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-        const dateSpans = document.querySelectorAll('.today-date');
-        dateSpans.forEach(span => span.textContent = formatted);
-    });
-</script>
-</html>
+         document.getElementById('td-id-number').textContent =  maskIdNumber(idNumber);
+         document.getElementById('td-id-type').textContent = idType;
+         document.getElementById('td-blacklist-status').textContent = acctBlacklist || '';
+         document.getElementById('td-blacklist-reason').textContent = 'Account Blacklist';
+         document.getElementById('td-account-number').textContent = accountNumber || '';
+         document.getElementById('td-blacklisted-on').textContent = statusDate || '';
+
+
+         
+     });
+     </script>
+    </body>
+ </html>

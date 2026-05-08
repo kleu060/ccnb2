@@ -271,25 +271,25 @@ export const mockBlacklistInquiryData = {
 
 export const mockInternalBlacklistInquiryData = {
     data: [
-        {
-            id_number: "7701020304",
-            id_type: "NewIC",
-            id_blacklisted: "yes",
-            reason: "deceased",
-            sub_reason: "deceased",
-            update_date: "2024-02-03",
-            updated_by: "C2288",
-            action: "<a class='btn btn-primary btn-deblacklist' onclick='deblacklist()'>Deblacklist</a>"
-        },
-        {
-            id_number: "7701020304",
-            id_type: "nonIC",
-            id_blacklisted: "no",
-            reason: "Fraud",
-            sub_reason: "Fraud one",
-            update_date: "2024-03-04",
-            updated_by: "C1218",
-            action: "<a class='btn btn-primary btn-deblacklist' onclick='deblacklist()'>Deblacklist</a>"
-        },
+        // {
+        //     id_number: "7701020304",
+        //     id_type: "NewIC",
+        //     id_blacklisted: "yes",
+        //     reason: "deceased",
+        //     sub_reason: "deceased",
+        //     update_date: "2024-02-03",
+        //     updated_by: "C2288",
+        //     action: "<a class='btn btn-primary btn-deblacklist' onclick='deblacklist()'>Deblacklist</a>"
+        // },
+        // {
+        //     id_number: "7701020304",
+        //     id_type: "nonIC",
+        //     id_blacklisted: "no",
+        //     reason: "Fraud",
+        //     sub_reason: "Fraud one",
+        //     update_date: "2024-03-04",
+        //     updated_by: "C1218",
+        //     action: "<a class='btn btn-primary btn-deblacklist' onclick='deblacklist()'>Deblacklist</a>"
+        // },
     ]
 };

@@ -13,7 +13,7 @@ export async function BlackListMain() {
     const ctosHtml = await renderCTOSTab();
     const internalBlacklistHtml = await renderInternalBlackListTab();
 
-    return `
+    const html =  `
         <section class="container-fluid section-blacklist">
             <!-- Tabs Navigation -->
             <div class="row mb-3">
@@ -41,4 +41,8 @@ export async function BlackListMain() {
             </div>
         </section>
     `;
+
+    
+
+    return html;
 }

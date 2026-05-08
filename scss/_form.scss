@@ -1,5 +1,7 @@
 form {
-    
+    button {
+        margin-bottom: 8px;
+    }
 }
 
 .field-group {
@@ -10,7 +12,9 @@ form {
         width: 50%;       
     }
     
-    input[type=text] {
+    input[type=text], select {
         margin-bottom: 8px;
     }
+
+
 }

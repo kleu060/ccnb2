@@ -99,6 +99,7 @@ export async function Inquiry() {
         //     }
         //     });
         // });
+        console.log("here");
         document.getElementById("btn-cancel-search").addEventListener("click", function(){
             const searchInputs = document.querySelectorAll('.search-input');
             searchInputs.forEach(input => {

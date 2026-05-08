@@ -3,55 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>Blacklist inquiry Print Page</title>
-
     <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        body {
+            font-size: 1.5em !important;
+        }
+    </style>
 </head>
 <body>
     <div class="d-flex">
         
         <div class="main">
-            <div id="header"></div>
+            <div>
+                <header class="d-flex align-items-center">
+                    <a class="logo me-3" href="/" data-link><img src="img/celcomdigi_logo.png" /></a>
+                    <h1>Blacklist check</h1>
+                </header>
+            </div>
             <main id="main-app">
 
                 <div class="mb-2">Requested on <span class="today-date"></span></div>
                 
-                <div class="border">
-                    <table class="table" style="width: fit-content;">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Blacklist Status</th>
-                                <td>ID blacklisted</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Blacklist Reason</th>
-                                <td>(3)deceased</td>
-                            </tr> 
-                            <tr>
-                                <th scope="row">Account Number</th>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">blacklisted on</th>
-                                <td>2026-01-02</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table print-table" style="width: fit-content;">
+                    <tbody>
+                        <tr>
+                            <th scope="row">ID Number</th>
+                            <td id="td-id-number"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">ID Type</th>
+                            <td id="td-id-type"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Blacklist Status</th>
+                            <td id="td-blacklist-status"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Blacklist Reason</th>
+                            <td id="td-reason"></td>
+                        </tr> 
+                        <tr>
+                            <th scope="row">Account Number</th>
+                            <td id="td-account-number"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Blacklisted On</th>
+                            <td id="td-blacklisted-on"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </main>
             <div id="footer"></div>
 
 
     </div>
 
-    <script type="module" src="/js/app.js"></script>
+    <script type="module" src="/js/print_app.js"></script>
 </body>
 <script>
+
+
+
     // Display today's date in .today-date span
     document.addEventListener('DOMContentLoaded', function() {
         const today = new Date();
         const formatted = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
         const dateSpans = document.querySelectorAll('.today-date');
         dateSpans.forEach(span => span.textContent = formatted);
+    });
+
+</script>
+<script type="module">
+    import { fetchData } from '/js/components/blacklist-inquiry-table.js';
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // parse query string
+        const params = new URLSearchParams(window.location.search);
+        const accountCode = params.get('accountCode') || '';
+        const idNumber = params.get('idNumber') || '';
+        const idType = params.get('idType') || '';
+
+        // decide search type and argument
+        const searchType = accountCode ? 'acc_code' : 'id_num';
+        const searchValue = accountCode || idNumber;
+
+        // call fetchData with parsed values
+        const fetchResult = await fetchData(searchType, searchValue, idType);
+
+        // example: populate reason cell if response contains data
+        try {
+          const parsed = fetchResult && fetchResult.response ? JSON.parse(fetchResult.response) : null;
+
+        //   console.log(parsed); return;
+          if (parsed && parsed.id_blacklist && parsed.id_blacklist.length > 0) {
+            const bl = parsed.id_blacklist[0];
+
+            function maskIdNumber(id) {
+                const s = String(id || '');
+                if (s.length <= 5) return 'x'.repeat(s.length); // mask all if shorter or equal to 5
+                return 'x'.repeat(5) + s.slice(5); // always mask first 5 characters
+            }
+
+            document.getElementById('td-id-number').textContent = maskIdNumber(bl.id_num);
+            document.getElementById('td-id-type').textContent = bl.id_type;
+            document.getElementById('td-blacklist-status').textContent = "ID Blacklisted";
+            document.getElementById('td-reason').textContent = bl.reason || '';
+            document.getElementById('td-account-number').textContent = '';
+            document.getElementById('td-blacklisted-on').textContent = bl.updated_date || '';
+          }
+        } catch (e) {
+          console.warn('Failed to parse fetchResult.response', e);
+        }
+
+      } catch (err) {
+        console.error('fetchData error', err);
+      }
     });
 </script>
 </body>

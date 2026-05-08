@@ -1,6 +1,5 @@
 import { isLogin } from "./auth/auth.js";
 
-
 import { Home } from "./pages/home.js";
 import { LoginPage } from "./pages/login.js";
 import { LogoutPage } from "./pages/logout.js";
@@ -19,45 +18,45 @@ import { Commission } from "./pages/Commission.js";
 import { DcaCommission } from "./pages/DcaCommission.js";
 import { AdminMain } from "./pages/AdminMain.js";
 
-
-
 import { loadDebtorTable } from "./components/debtor-table.js";
 import { loadCustomerTable } from "./components/customer-table.js";
 import { loadBlacklistTable } from "./components/blacklist-inquiry-table.js";
 import { loadCtosTable } from "./components/ctos-table.js";
 import { loadInternalBlacklistTable } from "./components/internal-blacklist-table.js";
 
+import { APP_ROOT } from "./config.js";
+
 
 const routes = {
-    "/": LoginPage,
-    "/login": LoginPage,
-    "/inquiry": Inquiry,
-    "/customer-search": CustomerSearch,
-    "/account-code-search": AccountCodeMain,
-    "/key-account": KeyAccount,
-    "/blacklist": BlackListMain,
-    "/dunning-group": DunningGroupMain,
-    "/dca": DcaMain,
-    "/dca-agency": DcaAgencyMain,
-    "/nod": Nod,
-    "/credit-score": CreditScore,
-    "/commission": Commission,
-    "/dca-commission": DcaCommission,
-    "/admin": AdminMain,
-    "/change-password": ChangePassword,
-    "/logout": LogoutPage,
+    [ APP_ROOT + "/" ]: LoginPage,
+    [ APP_ROOT + "/login" ]: LoginPage,
+    [ APP_ROOT + "/inquiry" ]: Inquiry,
+    [ APP_ROOT + "/customer-search" ]: CustomerSearch,
+    [ APP_ROOT + "/account-code-search" ]: AccountCodeMain,
+    [ APP_ROOT + "/key-account" ]: KeyAccount,
+    [ APP_ROOT + "/blacklist" ]: BlackListMain,
+    [ APP_ROOT +  "/dunning-group" ]: DunningGroupMain,
+    [ APP_ROOT + "/dca" ]: DcaMain,
+    [ APP_ROOT + "/dca-agency" ]: DcaAgencyMain,
+    [ APP_ROOT +  "/nod" ]: Nod,
+    [ APP_ROOT + "/credit-score" ]: CreditScore,
+    [ APP_ROOT + "/commission"]: Commission,
+    [ APP_ROOT + "/dca-commission" ]: DcaCommission,
+    [ APP_ROOT + "/admin" ]: AdminMain,
+    [ APP_ROOT + "/change-password" ]: ChangePassword,
+    [ APP_ROOT + "/logout" ]: LogoutPage,
 };
 
 export async function router() {
-
+    // Get the full URL (protocol + host + pathname)
     const path = window.location.pathname;
-
+    console.log(path);
     // check Auth if not in login page
-    if ( path != "/" && path != "/login" ) {
+    if ( path != APP_ROOT + "/" && path != APP_ROOT + "/login" ) {
         const loggedIn = await isLogin();
         console.log("is login: " + loggedIn);
         if ( !loggedIn ) {
-            window.location.href = "/"
+            window.location.href = APP_ROOT + "/login";
         }
     }
 
@@ -86,8 +85,8 @@ export async function router() {
         loadCustomerTable();
     }
     else if ( path == "/blacklist" ){
-        loadBlacklistTable();
-        loadCtosTable();
+        loadBlacklistTable("{}");
+        loadCtosTable("{}");
         loadInternalBlacklistTable();
     }
 

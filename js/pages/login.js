@@ -1,4 +1,6 @@
 import { login } from "../api/login-api.js";
+import { APP_ROOT } from '../config.js';
+
 
 export async function LoginPage() {
     const html = `
@@ -53,7 +55,7 @@ export async function LoginPage() {
 
                 if ( result.success) {
                     // login successful
-                    window.location = "/inquiry";
+                    window.location.href = APP_ROOT + "/inquiry";
                 } else {
                     errorMessage.textContent = result.error_description;
                     submitBtn.disabled = false;
