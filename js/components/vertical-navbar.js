@@ -20,8 +20,8 @@ export async function renderVerticalNavBar() {
             </li>
 
 
-            <li id="menu-item-account-code-search" data-bs-toggle="tooltip" data-bs-placement="right" title="Account Code Search">
-                <a href="account-code-search">
+            <li id="menu-item-account-inquiry" data-bs-toggle="tooltip" data-bs-placement="right" title="Account Inquiry">
+                <a href="account-inquiry">
                     <span class="icon icon-user bg-white"></span>
                 </a>
             </li>

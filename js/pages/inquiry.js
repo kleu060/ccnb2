@@ -1,9 +1,11 @@
 import { loadInquiryTable } from "../components/inquiry.js";
+import { logEvent } from '../logEvent.js';
 
 
 export async function Inquiry() {
     // const activeAssignmentList = await getActiveAssignmentList();
     // const getActiveAssignmentListTableactions = await getActiveAssignmentListTableData();
+    logEvent('info', 'Visit Account Search page');
     
     const fields = {
         "account_code": "Customer Name",
@@ -77,29 +79,7 @@ export async function Inquiry() {
     `;
 
     setTimeout(() => {
-        // const searchInputs = document.querySelectorAll('.search-input');
-        
-        // searchInputs.forEach(input => {
-        //     input.addEventListener('input', function() {
 
-        //     console.log("input");
-        //     if (this.value.trim() !== '') {
-        //         // Disable and clear all other inputs
-        //         searchInputs.forEach(otherInput => {
-        //         if (otherInput !== this) {
-        //             otherInput.value = '';
-        //             otherInput.disabled = true;
-        //         }
-        //         });
-        //     } else {
-        //         // Enable all inputs when current input is empty
-        //         searchInputs.forEach(otherInput => {
-        //             otherInput.disabled = false;
-        //         });
-        //     }
-        //     });
-        // });
-        console.log("here");
         document.getElementById("btn-cancel-search").addEventListener("click", function(){
             const searchInputs = document.querySelectorAll('.search-input');
             searchInputs.forEach(input => {

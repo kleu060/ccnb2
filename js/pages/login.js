@@ -1,8 +1,12 @@
 import { login } from "../api/login-api.js";
 import { APP_ROOT } from '../config.js';
-
+import { logEvent } from '../logEvent.js';
 
 export async function LoginPage() {
+
+    const params = new URLSearchParams(window.location.search);
+    const msg = params.get('msg') || '';
+
     const html = `
         <section class="container-fluid login-section" id="login-section">
             <div class="card col-10">
@@ -23,10 +27,11 @@ export async function LoginPage() {
                                     <input type="checkbox" id="chk-agree-legal-notice" name="chk-agree-legal-notice" value="agree" class="me-1" required />
                                     <label for="chk-agree-legal-notice">I agree to <u>Legal Notice</u></label>
                                 </div>
-                                <div id="error-message" class="mb-3 error-message"></div>
+                                <div id="error-message" class="mb-3 error-message">${msg}</div>
                                 <div class="field-group">
                                     <button class="btn btn-primary" type="submit" >Login</button>
                                 </div>
+                                
                             </form>
                         </div>
                         <div class="col-8">
@@ -46,6 +51,9 @@ export async function LoginPage() {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault(); // prevent page reload
 
+            const username = document.getElementById("username").value;
+            localStorage.setItem("user", username);
+            logEvent('info', 'User attempted login');
             const submitBtn = e.target.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.textContent = "Logging in...";
@@ -55,9 +63,12 @@ export async function LoginPage() {
 
                 if ( result.success) {
                     // login successful
+                    
+                    logEvent('info', 'User login success');
                     window.location.href = APP_ROOT + "/inquiry";
                 } else {
                     errorMessage.textContent = result.error_description;
+                    logEvent('info', 'User login fail - ' + JSON.stringify(result));
                     submitBtn.disabled = false;
                     submitBtn.textContent = "Login";
                     return;                
@@ -68,6 +79,8 @@ export async function LoginPage() {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Login";
                 console.error("Login error:", err);
+
+                logEvent('error', 'User login fail due to server error.  Please check API Server');
                 errorMessage.textContent = "Login failed due to server error.";
             }
         });

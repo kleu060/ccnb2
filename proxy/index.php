@@ -8,6 +8,9 @@ $client = new ProxyClient();
 
 switch ($endpoint) {
 
+    case "checktoken":
+        echo $client->get("/checktoken/", $token);
+        break;
     case "invoices":
         echo $client->get("/invoices", $token);
         break;
@@ -24,21 +27,82 @@ switch ($endpoint) {
 
     case "accinq_2001":
 
-        $data = [
-            "account_code" => $_GET["account_code"],
-            "customer_name" => $_GET["customer_name"],
-            "accounid_numbert_code" => $_GET["id_number"],
-            "msisdn" => $_GET["msisdn"],
-            "invoice_number" => $_GET["invoice_number"],
-            "iccid" => $_GET["iccid"],
-        ];
-
+        $data = json_decode(file_get_contents('php://input'), true);
         echo $client->get("/accinq_2001/", $token, $data);
         // echo "here";
         break;
 
+    case "acodeinq_2003":
+        $input = json_decode(file_get_contents('php://input'), true);
+        $data = [];
+        if ( $input["searchType"] == "acc_code"){
+            $data = [
+                "search_type" => $input["searchType"],
+                "acc_code" => $input["searchString"],
+            ];
+        }
+        else{       //search_type == "acc_id"
+            $data = [
+                "search_type" => $input["searchType"],
+                "acc_id" => $input["searchString"],
+            ];
+        }
+        // print_r($data); exit();
+        echo $client->get("/acodeinq_2003/search.php", $token, $data);
+        // echo "here";
+        break;
+
+    case "acodeinq_2003_subinfo":
+        $input = json_decode(file_get_contents('php://input'), true);
+        $data = [
+            "search_type" => $input["searchType"],
+            "acc_id" => $input["accId"],
+        ];
+        
+        echo $client->get("/acodeinq_2003/getsubinfo.php", $token, $data);
+        break;
+    
+    case "change_password":
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        $newPassword = $input["new_password"];
+        $confirmPassword = $input["confirm_password"];
+
+        if ( $newPassword != $confirmPassword ) {
+            $return = [
+                "success" => false,
+                "response" => "New Password and Confirm Password not match"
+            ];
+            echo json_encode($return);
+            return;
+        }
+
+        if ( !validatePassword($newPassword) ) {
+            $return = [
+                "success" => false,
+                "response" => "Password does not meet requirements."
+            ];
+            echo json_encode($return);
+            return;
+        }
+
+        
+
+        $data = [
+            "new_password" => $input["new_password"],
+            "confirm_password" => $input["confirm_password"],
+        ];
+
+        $return = [
+                "success" => false,
+                "response" => "Valid Password"
+            ];
+        echo json_encode($return);
+        
+
+        break;
     case "logout":
-        $response = $client->get("/logout/", $token);
+        $response = $client->get("/logout", $token);
 	    $responseDecode = json_decode($response, true);
 
         // if ($responseDecode["error_code"] == 0) {
@@ -136,4 +200,14 @@ switch ($endpoint) {
         echo json_encode([
             "error" => "Unknown endpoint"
         ]);
+}
+
+function validatePassword($password) {
+    // Regular expression for the specified criteria
+    $pattern = '/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@\$%\^&\*\(\);:,<\.>\/\?]).{9,20}$/';
+    
+    if (preg_match($pattern, $password)) {
+        return true;
+    }
+    return false;
 }

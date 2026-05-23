@@ -32,11 +32,10 @@ const columnsConfig = {
     invoice: [
         { title: "Invoice Number", data: "invoice_number" },
         { title: "Invoice Date", data: "invoice_date" },
-        { title: "Invoice Due Date", data: "inovice_due_date" },
+        { title: "Invoice Due Date", data: "invoice_due_date" },
         { title: "Amount", data: "amount" },
-        { title: "Outstanding", data: "outstanding" },
+        { title: "Outstanding Amount", data: "outstanding_amount" },
         { title: "Status", data: "status" }, // Open / Close
-        { title: "Invoice Close Date", data: "invoice_close_date" },
     ],
     payment: [
         { title: "Payment Id", data: "payment_id" },
@@ -68,10 +67,14 @@ async function fetchAdjustTableData() {
 }
 
 // Initialize or rebuild DataTable
-export async function loadDebtorTable(type) {
+export async function loadDebtorTable(type, data) {
+
+    // console.log(data);
+    // let parsedResposne = JSON.parse(data.response);
+    // console.log(parsedResposne);
 
 
-    const data = await fetchData(type);
+    // const data = await fetchData(type);
     // Destroy old table if exists
     if (table) {
         table.destroy();

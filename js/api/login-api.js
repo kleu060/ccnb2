@@ -1,4 +1,5 @@
 import { API_BASE } from '../config.js';
+import { logEvent } from '../logEvent.js';
 
 export async function login() {
     const loginForm = document.getElementById("login-form");
@@ -6,7 +7,11 @@ export async function login() {
     const formData = new FormData(loginForm);
     const formObject = Object.fromEntries(formData.entries());
 
-    const res = await fetch(`${API_BASE}/login.php`, {
+    // console.log(`${API_BASE}/login.php`);
+    const url = `${API_BASE}/login.php`;
+
+    logEvent('info', 'User login request ' + url );
+    const res = await fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

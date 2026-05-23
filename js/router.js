@@ -6,7 +6,7 @@ import { LogoutPage } from "./pages/logout.js";
 import { ChangePassword } from "./pages/change-password.js";
 import { Inquiry } from "./pages/inquiry.js";
 import { CustomerSearch } from "./pages/customer.js";
-import { AccountCodeMain } from "./pages/accountCodeMain.js";
+import { AccountInquiryMain } from "./pages/accountInquiryMain.js";
 import { KeyAccount } from "./pages/keyAccount.js";
 import { BlackListMain } from "./pages/blacklistMain.js";
 import { DunningGroupMain } from "./pages/dunningGrouptMain.js";
@@ -25,6 +25,7 @@ import { loadCtosTable } from "./components/ctos-table.js";
 import { loadInternalBlacklistTable } from "./components/internal-blacklist-table.js";
 
 import { APP_ROOT } from "./config.js";
+import { logEvent } from './logEvent.js';
 
 
 const routes = {
@@ -32,7 +33,7 @@ const routes = {
     [ APP_ROOT + "/login" ]: LoginPage,
     [ APP_ROOT + "/inquiry" ]: Inquiry,
     [ APP_ROOT + "/customer-search" ]: CustomerSearch,
-    [ APP_ROOT + "/account-code-search" ]: AccountCodeMain,
+    [ APP_ROOT + "/account-inquiry" ]: AccountInquiryMain,
     [ APP_ROOT + "/key-account" ]: KeyAccount,
     [ APP_ROOT + "/blacklist" ]: BlackListMain,
     [ APP_ROOT +  "/dunning-group" ]: DunningGroupMain,
@@ -56,7 +57,16 @@ export async function router() {
         const loggedIn = await isLogin();
         console.log("is login: " + loggedIn);
         if ( !loggedIn ) {
-            window.location.href = APP_ROOT + "/login";
+            console.log("here");
+        
+            document.getElementById("expire-container").style.display = "block";
+            //access token expire;
+            setTimeout(function(){
+                document.getElementById("expire-container").style.display = "none";
+                window.location.href="/ccnb2/login?msg=Access token expired";
+                
+                return false;
+            }, 3000);
         }
     }
 
@@ -72,7 +82,7 @@ export async function router() {
 
 
     // Event listener
-    if ( path == "/account-code-search" ){
+    if ( path == "/account-enquiry" ){
         const params = new URLSearchParams(window.location.search);
         const accountNo = params.get('account_code') || '';
         
@@ -90,5 +100,15 @@ export async function router() {
         loadInternalBlacklistTable();
     }
 
+
+    /* Write event to log file when click on tabs */
+    const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]')
+    tabEls.forEach(tabEl => {
+
+        tabEl.addEventListener('shown.bs.tab', event => {
+            const parent = event.target.dataset.parent ?? 'No Defined';
+            logEvent('info', 'Visit ' + parent  + ' page - ' + event.target.getAttribute("aria-controls"));
+        })
+    });
 
 }

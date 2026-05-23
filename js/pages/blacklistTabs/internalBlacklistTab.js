@@ -1,4 +1,7 @@
 import { API_BASE } from '../../../js/config.js';
+import { logEvent } from '../../../js/logEvent.js';
+import { fetchAPI } from '../../api/fetch-api.js';
+
 
 export async function renderInternalBlackListTab() {
 
@@ -88,26 +91,33 @@ export async function renderInternalBlackListTab() {
 
                 formData.append("file", fileInput.files[0]);
 
-                const response = await fetch(`${API_BASE}/index.php?endpoint=id_blacklist_excel_upload`, {
+
+                const url = `${API_BASE}/index.php?endpoint=id_blacklist_excel_upload`;
+                const response = await fetch(url, {
                     method: "POST",
                     body: formData,
                     credentials: "include"
                 });
-
                 const result = await response.json();
-                internalBlackListBulkUploadLoading.classList.add("d-none");
+                // const result = await fetchAPI(url, formData);
+
+
+
 
                 const inner = JSON.parse(result.response);
+                internalBlackListBulkUploadLoading.classList.add("d-none");
                 if ( !result.success ) {
 
                     internalBlacklistBulkUploadResponse.innerHTML = inner.error_description;
                     internalBlacklistBulkUploadResponse.classList.add("invalid");
+                    
                     
                 }
                 else {
                     if ( inner.error_code == 0) {
                         internalBlacklistBulkUploadResponse.innerHTML = "Excel file uploaded successfully";
                         internalBlacklistBulkUploadResponse.classList.add("valid");
+
                     }
                     else {
                         internalBlacklistBulkUploadResponse.innerHTML = inner.error_description;

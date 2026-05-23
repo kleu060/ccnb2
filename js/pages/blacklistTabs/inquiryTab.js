@@ -1,8 +1,10 @@
 import { fetchData , loadBlacklistTable } from "../../components/blacklist-inquiry-table.js";
 import { APP_ROOT } from "../../config.js"
 
+
 export async function renderBlacklistInquiryTab() {
     let blData = [];
+    
 
     const html =  `
         <section class="tab-pane fade show active" id="inquiry-tab" role="tabpanel" aria-labelledby="inquiry-tab">

@@ -2,6 +2,8 @@ import DataTable from "datatables.net-bs5";
 import "datatables.net-bs5/css/dataTables.bootstrap5.css";
 // import { mockBlacklistInquiryData } from "./mockData.js";
 import { API_BASE } from '../config.js';
+import { fetchAPI } from '../api/fetch-api.js';
+
 
 // Keep reference to your DataTable
 let table = null;
@@ -36,15 +38,11 @@ export async function fetchData(searchType, searchString, idType) {
     };
 
     // console.log( JSON.stringify(body) );
-    const response = await fetch(`${API_BASE}/index.php?endpoint=blacklist_serach`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body),
-        credentials: "include"
-    });
-    return response.json();
+
+    const url = `${API_BASE}/index.php?endpoint=blacklist_serach`;
+    const responseJson = await fetchAPI(url, body);
+    
+    return responseJson;
 }
 
 // Initialize or rebuild DataTable

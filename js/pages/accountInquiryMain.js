@@ -5,18 +5,20 @@ import { renderAgentSummaryTab } from "./accountSearchCodeTabs/agentSummaryTab.j
 import { renderAgentUpdateTab  } from "./accountSearchCodeTabs/agentUpdateTab.js";
 // import { renderAgentUpdateTab, initAgentUpdateTab } from "./tabs/agent-update-tab.js";
 // import { renderAgentSummaryTab, initAgentSummaryTab } from "./tabs/agent-summary-tab.js";
+import { logEvent } from '../logEvent.js';
 
-
-export async function AccountCodeMain() {
+export async function AccountInquiryMain() {
 
     // Get account_no from query string
     const params = new URLSearchParams(window.location.search);
     const accountNo = params.get('account_code') || '';
-    const account = await getAccount(accountNo);
+    // const account = await getAccount(accountNo);
     const actions = await getAccountActionHistory(accountNo);
 
+    logEvent('info', 'Visit Account Inquiry page');
+
     // Render all tabs
-    const accountTabHtml = await renderAccountTab(accountNo, account, actions);
+    const accountTabHtml = await renderAccountTab(actions);
     const agentSummaryTabHtml = await renderAgentSummaryTab();
     const agentUpdateTabHtml = await renderAgentUpdateTab();
 
@@ -27,13 +29,13 @@ export async function AccountCodeMain() {
                 <div class="col">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="btn-account-tab" data-bs-toggle="tab" data-bs-target="#account-tab" type="button" role="tab" aria-controls="account-tab" aria-selected="true">Account</button>
+                            <button class="nav-link active" id="btn-account-tab" data-bs-toggle="tab" data-bs-target="#account-tab" type="button" role="tab" aria-controls="account-tab" aria-selected="true" data-parent="Account Inquiry">Account</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="btn-agent-update-tab" data-bs-toggle="tab" data-bs-target="#agent-update-tab" type="button" role="tab" aria-controls="agent-update-tab" aria-selected="false">Agent Update</button>
+                            <button class="nav-link" id="btn-agent-update-tab" data-bs-toggle="tab" data-bs-target="#agent-update-tab" type="button" role="tab" aria-controls="agent-update-tab" aria-selected="false" data-parent="Account Inquiry">Agent Update</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="btn-agent-summary-tab" data-bs-toggle="tab" data-bs-target="#agent-summary-tab" type="button" role="tab" aria-controls="agent-summary-tab" aria-selected="false">Agent Summary</button>
+                            <button class="nav-link" id="btn-agent-summary-tab" data-bs-toggle="tab" data-bs-target="#agent-summary-tab" type="button" role="tab" aria-controls="agent-summary-tab" aria-selected="false" data-parent="Account Inquiry">Agent Summary</button>
                         </li>
                     </ul>
                 </div>

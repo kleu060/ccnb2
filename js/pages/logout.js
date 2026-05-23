@@ -32,7 +32,7 @@ export async function LogoutPage() {
     // Trigger the redirect after 2 seconds so the user can read the message
     setTimeout(() => {
         
-        window.location.href = "${APP_ROOT}/login";
+        window.location.href = APP_ROOT + "/login";
     }, 2000);
 
     return msg;

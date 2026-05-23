@@ -1,7 +1,11 @@
 export async function renderAgentSummaryTab() {
 
-    return `
+    const html =  `
         <div class="tab-pane fade" id="agent-summary-tab" role="tabpanel" aria-labelledby="agent-summary-tab">
-            Agent Summary
+            <section class="container-fluid" id="account-enquiry-agent-summary-tab">
+        
+            </section>
         </div>`;
+
+    return html;
 }

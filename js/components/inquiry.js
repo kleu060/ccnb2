@@ -2,6 +2,9 @@ import DataTable from "datatables.net-bs5";
 import "datatables.net-bs5/css/dataTables.bootstrap5.css";
 // import { activeListAssignmentMockData } from "./mockData.js";
 import { API_BASE } from '../config.js';
+import { logEvent } from '../logEvent.js';
+import { fetchAPI } from '../api/fetch-api.js';
+
 
 // Keep reference to your DataTable
 let activeAssignmentListTable = null;
@@ -16,7 +19,7 @@ const columnsConfig = {
             data: "account_code",
             render: function(data, type, row, meta) {
                 if (type === 'display') {
-                    return `<a href="/account-code-search?account_code=${encodeURIComponent(data)}">${data}</a>`;
+                    return `<a href="/account-enquiry?account_code=${encodeURIComponent(data)}">${data}</a>`;
                 }
                 return data;
             }
@@ -29,16 +32,10 @@ const columnsConfig = {
 
 // Mock API fetch for demonstration
 async function fetchData(formData) {
-    const queryString = new URLSearchParams(formData).toString();
-    const response= await fetch(`${API_BASE}/index.php?endpoint=accinq_2001&${queryString}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        // body: JSON.stringify(formData),
-        credentials: "include"
-    });
-    return response.json();
+    // const queryString = new URLSearchParams(formData).toString();
+    const url = `${API_BASE}/index.php?endpoint=accinq_2001`;
+    const response= await fetchAPI(url, formData); 
+    return response;
 }
 
 // Initialize or rebuild DataTable
@@ -55,11 +52,18 @@ export async function loadInquiryTable(formData) {
 
     // Create Adjustable DataTable
     let errorMsg = "No record found";
+    let data;
     if ( !activeListAssignmentData.success) {
         errorMsg = activeListAssignmentData.error_description
-    } 
+        data = [];
+    }
+    else {
+        data = JSON.parse(activeListAssignmentData.response);
+    }
+
+    
     activeAssignmentListTable = new DataTable("#active-assignment-list-table", {
-            data: activeListAssignmentData.response,
+            data:  data,
             columns: columnsConfig["activeListAssignment"],
             searching: false,
             language: {

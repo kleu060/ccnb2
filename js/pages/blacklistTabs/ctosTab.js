@@ -1,5 +1,6 @@
 import { fetchData , loadCtosTable } from "../../components/ctos-table.js";
 import { APP_ROOT, API_BASE } from '../../config.js';
+import { fetchAPI } from '../../api/fetch-api.js';
 
 export async function renderCTOSTab() {
 
@@ -249,16 +250,8 @@ export async function renderCTOSTab() {
                             searchString,
                         };
                         // console.log(JSON.stringify(body));
-                        const response = await fetch(`${API_BASE}/index.php?endpoint=deblacklist`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(body),
-                            credentials: "include"
-                        });
-
-                        console.log(response);
+                        const url = `${API_BASE}/index.php?endpoint=deblacklist`;
+                        await fetchAPI(url, body);
 
 
                         const ctosTableContainer = document.getElementById("ctos-table-container");
@@ -287,7 +280,7 @@ export async function renderCTOSTab() {
 
         //btn-account-blacklist-print
 
-        function clearBlData(idBlackList) {
+        function clearBlData() {
             window.dispatchEvent(new CustomEvent('update-bl-data-ctos', {
                 detail: {
                     name: "",
