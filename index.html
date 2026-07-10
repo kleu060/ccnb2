@@ -6,6 +6,29 @@
     <title>Credit Control Portal</title>
 
     <link rel="stylesheet" href="css/style.css">
+
+    <script type="module">
+        // Import your fetch function if it is defined in an external file, e.g.:
+        import { getSessionVariable } from "./js/auth/getSessionVariable.js";
+
+
+        try {
+            // 2. Safely await the asynchronous PHP API data
+            const variables = await getSessionVariable();
+            
+            // 3. Attach the frozen array to the window object for global availability
+            window.allowed_pages = Object.freeze(variables.allowed_pages || []);
+            window.username = variables.username;
+            window.force_change_pw = variables.force_change_pw;
+            window.group_name = variables.group_name;
+            window.latest_id_blacklist_file = variables.latest_id_blacklist_file;
+            
+            console.log("Global allowed_pages initialized:", window.allowed_pages);
+        } catch (error) {
+            console.error("Failed to load session variables:", error);
+            window.allowed_pages = Object.freeze([]);
+        }
+    </script>
 </head>
 <body>
     <div class="d-flex">
@@ -19,7 +42,7 @@
             <div id="footer"></div>
         </div>
         <div  style="display:none; background-color:#0000002a; width: 100vw; height: 100vh; position:fixed" id="expire-container">
-            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size: 20px; font-weight: bold;">Your access token has expired.  Please Login again...</div>
+            <div style="padding:50px; background-color: white; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size: 20px; font-weight: bold;">Your access token has expired.  Please Login again...</div>
         </div>
 
     </div>

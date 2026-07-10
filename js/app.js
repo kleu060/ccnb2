@@ -7,6 +7,9 @@ import "datatables.net-bs5/css/dataTables.bootstrap5.css";
 import '../scss/app.scss';
 import * as bootstrap from 'bootstrap';
 
+// Import the default CSS theme (requires a bundler like Webpack or Vite)
+import 'tom-select/dist/css/tom-select.default.css';
+
 // import "./components/table.js";   // relative path from app.js
 
 import { renderVerticalNavBar } from "./components/vertical-navbar.js";
@@ -14,6 +17,9 @@ import { renderHeader } from "./components/header.js";
 import { renderFooter } from "./components/footer.js";
 import { router } from "./router.js";
 import { API_BASE } from './config.js';
+import { getSessionVariable } from "./auth/getSessionVariable.js";
+
+
 
 
 /* import functions */
@@ -35,6 +41,10 @@ var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggl
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
 })
+
+
+
+
 
 router();
 

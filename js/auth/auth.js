@@ -12,9 +12,7 @@ export async function isLogin() {
         });
         const responseJson = await response.json();
 
-        
-        console.log("Is Login");
-        console.log(responseJson);
+
         let result = null;
         if (responseJson && typeof responseJson.response === 'string' && responseJson.response.trim() !== '') {
             try {
@@ -27,7 +25,7 @@ export async function isLogin() {
             result = responseJson.response;
         }
 
-        if (result && result.error_code == 0 && result.error_description == "No error") {
+        if (result && result.error_code == 0 && result.error_description == "No error") {                
             return true;
         }
         return false;        

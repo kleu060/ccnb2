@@ -21,22 +21,23 @@ export async function fetchAPI(url, data = "", contentType = "") {
     });
 
     const responseJson = await response.json();
-    console.log(responseJson.success);
-    console.log(responseJson.error_code);
-    if (!responseJson.success && responseJson.error_code ==  2) {
 
-        console.log("here");
+    const responseData = responseJson?.response ? JSON.parse(responseJson.response) : null;
+    let errorCode;
+    if (responseData && responseData.error_code) {
+        errorCode = responseData.error_code;
+    }
+
+    if (!responseJson.success && errorCode ==  2) {
+
         document.getElementById("expire-container").style.display = "block";
         //access token expire;
         setTimeout(function(){
             document.getElementById("expire-container").style.display = "none";
             window.location.href="/ccnb2/login?msg=Access token expired";
         }, 3000);
-        return;
     }
 
     logEvent('info', 'API response - ' + JSON.stringify(responseJson) );
-    console.log(responseJson);
-
     return responseJson;
 }

@@ -6,6 +6,10 @@ import { logEvent } from '../logEvent.js';
 export async function ChangePassword() {
 
     logEvent('info', 'Visit Change Password page');
+    let passwordLength = 9;
+    if (window.group_name == "System1" || window.group_name == "SystemAdmin1" || window.group_name == "SystemAdmin2" || window.group_name == "Usertermination" ) {
+        passwordLength = 15;
+    }
 
 const html = `
         <section class="container-fluid login-section" id="login-section">
@@ -15,7 +19,7 @@ const html = `
                     <form id="change-password-form" class="border border-1 p-3">
                         <div class="field-group">
                             <label for="new_password">New Password</label>
-                            <input type="text" id="new_password" name="new_password"/>
+                            <input type="password" id="new_password" name="new_password"/>
                         </div>
                         <div class="field-group">
                             <label for="confirm_password">Confirm Password</label>
@@ -34,7 +38,7 @@ const html = `
                         <div class="card-body">
                             <div>The password should meet the following requirement:</div>
                                 <ul>
-                                    <li>Must be at least 9 characters long</li>
+                                    <li>Must be at least ${passwordLength} characters long</li>
                                     <li>Maximum 20 characters</li>
                                     <li>Must contain at least:<li>
                                         <ul>
@@ -53,6 +57,15 @@ const html = `
     `;
 
     setTimeout(() => {
+        // Run this code on page load
+        const errorMessage = document.getElementById("error-message");
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams.get('message'));
+        if (urlParams.get('message') === 'success') {
+            errorMessage.textContent = "Change password success";
+        }
+        
+
         document.getElementById("change-password-form").addEventListener("submit", async (e) => {
             e.preventDefault();
 
@@ -68,10 +81,27 @@ const html = `
                 const data = Object.fromEntries(formData.entries());
 
                 const url = `${API_BASE}/index.php?endpoint=change_password`;
-                const response= await fetchAPI(url, data);
+                const result = await fetchAPI(url, data);
+                console.log(result.success);
+                console.log(result.response);
 
-                if ( response.success == false ) {
-                    errorMessage.textContent = response.response;
+                const responseJson = JSON.parse(result.response);
+
+
+                if ( result.success === false ) {
+                    console.log('1');
+                    errorMessage.textContent = responseJson.error_description;
+                }
+                else {
+                    console.log('2');
+                    console.log(responseJson);
+                    if (responseJson.error_code == 0) {
+                        
+                        // errorMessage.textContent = "Change password success";
+                        const currentUrl = new URL(window.location.href);
+                        currentUrl.searchParams.set('message', 'success');
+                        window.location.href = "/ccnb2/change-password?message=success";
+                    }
                 }
 
             
@@ -85,7 +115,7 @@ const html = `
                 submitBtn.textContent = "Submit";
             }
         });
-    }, 0);
+    }, 500);
 
     return html;
 }

@@ -39,7 +39,7 @@ export async function fetchData(searchType, searchString, idType) {
 
     // console.log( JSON.stringify(body) );
 
-    const url = `${API_BASE}/index.php?endpoint=blacklist_serach`;
+    const url = `${API_BASE}/index.php?endpoint=blacklist_search`;
     const responseJson = await fetchAPI(url, body);
     
     return responseJson;
@@ -94,9 +94,6 @@ export async function loadBlacklistTable(fetchDataJson) {
         document.querySelector("#blacklist-inquiry-table tbody").innerHTML = "";
         document.querySelector("#blacklist-inquiry-table thead").innerHTML = "";
     }
-
-    
-
 
     console.log(data);
     // Create new DataTable

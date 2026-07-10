@@ -1,10 +1,12 @@
 import { isLogin } from "./auth/auth.js";
+import { getSessionVariable } from "./auth/getSessionVariable.js";
 
 import { Home } from "./pages/home.js";
 import { LoginPage } from "./pages/login.js";
+import { WelcomePage } from "./pages/welcome.js";
 import { LogoutPage } from "./pages/logout.js";
 import { ChangePassword } from "./pages/change-password.js";
-import { Inquiry } from "./pages/inquiry.js";
+import { Inquiry } from "./pages/inquiry.js";       //Page 2001
 import { CustomerSearch } from "./pages/customer.js";
 import { AccountInquiryMain } from "./pages/accountInquiryMain.js";
 import { KeyAccount } from "./pages/keyAccount.js";
@@ -26,32 +28,62 @@ import { loadInternalBlacklistTable } from "./components/internal-blacklist-tabl
 
 import { APP_ROOT } from "./config.js";
 import { logEvent } from './logEvent.js';
+import TomSelect from 'tom-select';
 
+
+// const routes = {
+//     [ APP_ROOT + "/" ]: LoginPage,
+//     [ APP_ROOT + "/login" ]: LoginPage,
+//     [ APP_ROOT + "/inquiry" ]: Inquiry,                                 //2001
+//     [ APP_ROOT + "/customer-search" ]: CustomerSearch,                  //2002
+//     [ APP_ROOT + "/account-inquiry" ]: AccountInquiryMain,              //2003, 2004, 2005
+//     [ APP_ROOT + "/key-account" ]: KeyAccount,                          //3001
+//     [ APP_ROOT + "/blacklist" ]: BlackListMain,                         //4001, 4002, 4003
+//     [ APP_ROOT +  "/dunning-group" ]: DunningGroupMain,                 //5001, 5002, 5003
+//     [ APP_ROOT + "/dca" ]: DcaMain,
+//     [ APP_ROOT + "/dca-agency" ]: DcaAgencyMain,
+//     [ APP_ROOT +  "/nod" ]: Nod,
+//     [ APP_ROOT + "/credit-score" ]: CreditScore,
+//     [ APP_ROOT + "/commission"]: Commission,
+//     [ APP_ROOT + "/dca-commission" ]: DcaCommission,
+//     [ APP_ROOT + "/admin" ]: AdminMain,
+//     [ APP_ROOT + "/change-password" ]: ChangePassword,
+//     [ APP_ROOT + "/logout" ]: LogoutPage,
+// };
 
 const routes = {
-    [ APP_ROOT + "/" ]: LoginPage,
-    [ APP_ROOT + "/login" ]: LoginPage,
-    [ APP_ROOT + "/inquiry" ]: Inquiry,
-    [ APP_ROOT + "/customer-search" ]: CustomerSearch,
-    [ APP_ROOT + "/account-inquiry" ]: AccountInquiryMain,
-    [ APP_ROOT + "/key-account" ]: KeyAccount,
-    [ APP_ROOT + "/blacklist" ]: BlackListMain,
-    [ APP_ROOT +  "/dunning-group" ]: DunningGroupMain,
-    [ APP_ROOT + "/dca" ]: DcaMain,
-    [ APP_ROOT + "/dca-agency" ]: DcaAgencyMain,
-    [ APP_ROOT +  "/nod" ]: Nod,
-    [ APP_ROOT + "/credit-score" ]: CreditScore,
-    [ APP_ROOT + "/commission"]: Commission,
-    [ APP_ROOT + "/dca-commission" ]: DcaCommission,
-    [ APP_ROOT + "/admin" ]: AdminMain,
-    [ APP_ROOT + "/change-password" ]: ChangePassword,
-    [ APP_ROOT + "/logout" ]: LogoutPage,
+    [ APP_ROOT + "/" ]: { component: LoginPage },
+    [ APP_ROOT + "/welcome" ]: { component: WelcomePage },
+    [ APP_ROOT + "/login" ]: { component: LoginPage },
+    [ APP_ROOT + "/inquiry" ]: { component: Inquiry, pageId: ['2001'] },
+    [ APP_ROOT + "/customer-search" ]: { component: CustomerSearch, pageId: ['2002'] },
+    [ APP_ROOT + "/account-inquiry" ]: { component: AccountInquiryMain, pageId: ['2003', '2004', '2005'] }, 
+    [ APP_ROOT + "/key-account" ]: { component: KeyAccount, pageId: ['3001'] },
+    [ APP_ROOT + "/blacklist" ]: { component: BlackListMain, pageId: ['4001', '4002', '4003', '4004'] },
+    [ APP_ROOT + "/dunning-group" ]: { component: DunningGroupMain, pageId: ['5001', '5002', '5003'] },
+    [ APP_ROOT + "/dca" ]: { component: DcaMain, pageId: ['6001'] },
+    [ APP_ROOT + "/dca-agency" ]: { component: DcaAgencyMain, pageId: ['6008'] },
+    [ APP_ROOT + "/nod" ]: { component: Nod, pageId: ['6003'] },
+    [ APP_ROOT + "/credit-score" ]: { component: CreditScore, pageId: ['7001'] },
+    [ APP_ROOT + "/commission"]: { component: Commission , pageId: ['8001'] },
+    [ APP_ROOT + "/dca-commission" ]: { component: DcaCommission },
+    [ APP_ROOT + "/admin" ]: { component: AdminMain, pageId: ['10001', '10002'] },
+    [ APP_ROOT + "/change-password" ]: { component: ChangePassword },
+    [ APP_ROOT + "/logout" ]: { component: LogoutPage },
 };
 
+
+
 export async function router() {
+
+
+
     // Get the full URL (protocol + host + pathname)
     const path = window.location.pathname;
     console.log(path);
+
+
+
     // check Auth if not in login page
     if ( path != APP_ROOT + "/" && path != APP_ROOT + "/login" ) {
         const loggedIn = await isLogin();
@@ -68,18 +100,64 @@ export async function router() {
                 return false;
             }, 3000);
         }
+        else {            
+            if (window.force_change_pw == 1){   // iff user isLogin and force to change password
+                if ( path != APP_ROOT + "/change-password" && path != APP_ROOT + "/logout" ) { // don't redirect if user already in change password page or attempt to logout
+                    window.location.href="/ccnb2/change-password";
+                    return;
+                }
+            }
+        }
     }
+    
 
-    const route = routes[path] || Home;
+    // const route = routes[path] || Home;
+    // const content = await route();
 
-    const content = await route();
+    // Get matched route configuration
+    const routeConfig = routes[path];
+    console.log(routes);
+    console.log(routes[path]);
+    console.log("path: " + path);
+    console.log(routeConfig);
+
+    // Check permissions if the route requires specific pageId arrays
+    if (routeConfig && Array.isArray(routeConfig.pageId)) {
+        const allowedPages = window.allowed_pages || [];
+        // const allowedPages = (window.allowed_pages || []).map(String);
+
+        // Check if at least one pageId from the route matches the allowed user pages
+        console.log("check permission");
+        console.log(allowedPages);
+        console.log(routeConfig.pageId);
+        // const hasAccess = routeConfig.pageId.some(id => allowedPages.includes(id));
+        const hasAccess = routeConfig.pageId.some(id => allowedPages.includes(id));
+        // const hasAccess = routeConfig.pageId.some(id => allowedPages.includes(Number(id)));
+
+        if (!hasAccess) {
+            console.warn(`Access denied for route: ${path}. Required one of:`, routeConfig.pageId);
+            
+            // Redirect unauthorized users to login page or an access denied page
+            window.location.href = APP_ROOT + "/403.html";
+            return;
+        }
+    }
+    console.log("here");
+
+    // Fallback to Home if route is not defined
+    const routeComponent = routeConfig ? routeConfig.component : Login;
+    const content = await routeComponent();
+
     const app = document.getElementById("main-app");
-
     app.innerHTML = content;
 
     Alpine.initTree(app); // 🔥 Important line
 
-
+    // if (path != "/change-password") {
+    //     if (Alpine.store('user_data').force_change_pw) {
+    //         window.location.href = APP_ROOT + "/change-password";
+    //     }
+    // }
 
     // Event listener
     if ( path == "/account-enquiry" ){
@@ -111,4 +189,38 @@ export async function router() {
         })
     });
 
+    if (document.querySelector('.tomselect')) {
+        new TomSelect('.tomselect', {
+            create: true, // Allows users to create new items
+            sortField: {
+                field: 'text',
+                direction: 'asc'
+            }
+        });
+    }
+
 }
+
+document.addEventListener('alpine:init', async () => {
+    console.log("here");
+    // Registering the global store
+    Alpine.store('user_data', {
+        username: '',
+        groupName: '',
+        allowedPages: '',
+        latest_id_blacklist_file: '',
+        force_change_pw: '',
+    });
+
+    // const variables = await getSessionVariable();
+    Alpine.store('user_data').username = window.username;
+    Alpine.store('user_data').groupName = window.group_name;
+    Alpine.store('user_data').allowedPages = window.allowed_pages;
+    Alpine.store('user_data').latest_id_blacklist_file_fraud = window.latest_id_blacklist_file_fraud;
+    Alpine.store('user_data').latest_id_blacklist_file_admin = window.latest_id_blacklist_file_admin;
+    Alpine.store('user_data').force_change_pw = window.force_change_pw;
+
+
+
+});
+

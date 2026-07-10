@@ -73,7 +73,7 @@ export async function fetchData(searchType, searchString, idType) {
         idType
     };
 
-    const url = `${API_BASE}/index.php?endpoint=blacklist_serach`;
+    const url = `${API_BASE}/index.php?endpoint=blacklist_search`;
     const responseJson = await fetchAPI(url, body);
 
     return responseJson;

@@ -7,7 +7,8 @@
 
     <style>
         body {
-            font-size: 1.5em !important;
+            --bs-body-line-height: 1.2;
+            font-size: 1em !important;
         }
     </style>
 </head>
@@ -15,48 +16,94 @@
     <div class="d-flex">
         
         <div class="main">
+
             <div>
                 <header class="d-flex align-items-center">
                     <a class="logo me-3" href="/" data-link><img src="img/celcomdigi_logo.png" /></a>
-                    <h1>Blacklist check</h1>
                 </header>
             </div>
             <main id="main-app">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-6">
 
-                <div class="mb-2">Requested on <span class="today-date"></span></div>
-                
-                <table class="table print-table" style="width: fit-content;">
-                    <tbody>
-                        <tr>
-                            <th scope="row">ID Number</th>
-                            <td id="td-id-number"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">ID Type</th>
-                            <td id="td-id-type"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Blacklist Status</th>
-                            <td id="td-blacklist-status"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Blacklist Reason</th>
-                            <td id="td-reason"></td>
-                        </tr> 
-                        <tr>
-                            <th scope="row">Account Number</th>
-                            <td id="td-account-number"></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Blacklisted On</th>
-                            <td id="td-blacklisted-on"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h1>Blacklist Check</h1>
+
+                                <div class="mb-2 border px-3 py-2">
+                                    <small class="text-muted">Requested on</small>
+                                    <br /><span class="today-date"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="card  border-0">
+                                <div class="card-body py-0">
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">ID Number</div>
+                                        <div class="col text-end" id="td-id-number"></div>
+                                    </div>
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">ID Type</div>
+                                        <div class="col text-end" id="td-id-type"></div>
+                                    </div>
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">Blacklist Status</div>
+                                        <div class="col text-end" id="td-blacklist-status"></div>
+                                    </div>
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">Blacklist Reason</div>
+                                        <div class="col text-end" id="td-reason"></div>
+                                    </div>
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">Account Number</div>
+                                        <div class="col text-end" id="td-account-number"></div>
+                                    </div>
+
+                                    <div class="row g-0 border-bottom p-3">
+                                        <div class="col-4 fw-semibold">Blacklisted On</div>
+                                        <div class="col text-end" id="td-blacklisted-on"></div>
+                                    </div>
+
+                                    <!-- <table class="table print-table" style="width: fit-content;">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">ID Number</th>
+                                                <td id="td-id-number"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">ID Type</th>
+                                                <td id="td-id-type"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Blacklist Status</th>
+                                                <td id="td-blacklist-status"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Blacklist Reason</th>
+                                                <td id="td-reason"></td>
+                                            </tr> 
+                                            <tr>
+                                                <th scope="row">Account Number</th>
+                                                <td id="td-account-number"></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Blacklisted On</th>
+                                                <td id="td-blacklisted-on"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
-            <div id="footer"></div>
-
-
+        <div id="footer"></div>
     </div>
 
     <script type="module" src="/js/print_app.js"></script>

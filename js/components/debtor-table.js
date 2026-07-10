@@ -67,8 +67,8 @@ async function fetchAdjustTableData() {
 }
 
 // Initialize or rebuild DataTable
-export async function loadDebtorTable(type, data) {
-
+export async function loadDebtorTable(type, data, tab) {
+    console.log("tab 2: " + tab);
     // console.log(data);
     // let parsedResposne = JSON.parse(data.response);
     // console.log(parsedResposne);
@@ -78,31 +78,32 @@ export async function loadDebtorTable(type, data) {
     // Destroy old table if exists
     if (table) {
         table.destroy();
-        document.querySelector("#option-table tbody").innerHTML = "";
-        document.querySelector("#table-header").innerHTML = "";
+        document.querySelector("#" + tab + "-option-table tbody").innerHTML = "";
+        document.querySelector("#" + tab + "-table-header").innerHTML = "";
     }
 
     // Create new DataTable
-    table = new DataTable("#option-table", {
+    table = new DataTable("#"+ tab + "-option-table", {
         data: data,
         columns: columnsConfig[type],
         searching: false,
     });
 
-    const adjustmentTableContainer = document.getElementById("adjustment-table-container")
+    const adjustmentTableContainer = document.getElementById(tab + "-adjustment-table-container");
+    console.log(adjustmentTableContainer);
     if ( type == "payment" ) {
         const adjustmentData = await fetchAdjustTableData(type);
 
         if (adjustmentTable) {
             adjustmentTable.destroy();
-            document.querySelector("#adjustment-table tbody").innerHTML = "";
-            document.querySelector("#adjustment-table-header").innerHTML = "";
+            document.querySelector("#" + tab + "-adjustment-table tbody").innerHTML = "";
+            document.querySelector("#" + tab + "-adjustment-table-header").innerHTML = "";
         }
 
         adjustmentTableContainer.classList.remove("d-none");
 
         // Create Adjustable DataTable
-        adjustmentTable = new DataTable("#adjustment-table", {
+        adjustmentTable = new DataTable("#" + tab + "-adjustment-table", {
             data: adjustmentData,
             columns: columnsConfig["adjustment"],
             searching: false,

@@ -1,5 +1,9 @@
 .print-table {
     th, td {
-        padding: 16px;
+        padding: 10px;
+
+        &.row_value {
+            text-align: left;
+        }
     }
 }

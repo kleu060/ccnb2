@@ -1,6 +1,6 @@
+//Page 2001
 import { loadInquiryTable } from "../components/inquiry.js";
 import { logEvent } from '../logEvent.js';
-
 
 export async function Inquiry() {
     // const activeAssignmentList = await getActiveAssignmentList();

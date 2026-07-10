@@ -15,11 +15,11 @@ export async function LoginPage() {
                         <div class="col-4">
                             <h5>Login</h5>
                             <form id="login-form" class="border border-1 p-3">
-                                <div class="field-group">
+                                <div class="field-group mb-1">
                                     <label for="username">Username</label>
                                     <input type="text" id="username" name="username" required/>
                                 </div>
-                                <div class="field-group">
+                                <div class="field-group mb-1">
                                     <label for="password">Password</label>
                                     <input type="password" id="password" name="password" required/>
                                 </div>
@@ -63,9 +63,20 @@ export async function LoginPage() {
 
                 if ( result.success) {
                     // login successful
-                    
                     logEvent('info', 'User login success');
-                    window.location.href = APP_ROOT + "/inquiry";
+                    if (result.force_change_pw == 1) {
+                        logEvent('info', 'User forces change password');
+                        window.location.href = APP_ROOT + "/change-password";
+                        return;
+                    }
+                    
+                    if ( result.group_name == "FinanceAdmin" || result.group_name == "FraudTeam") {
+                        window.location.href = APP_ROOT + "/blacklist";    
+                        return;
+                    }
+                    
+                    window.location.href = APP_ROOT + "/welcome";
+                    return;
                 } else {
                     errorMessage.textContent = result.error_description;
                     logEvent('info', 'User login fail - ' + JSON.stringify(result));
@@ -80,7 +91,7 @@ export async function LoginPage() {
                 submitBtn.textContent = "Login";
                 console.error("Login error:", err);
 
-                logEvent('error', 'User login fail due to server error.  Please check API Server');
+                logEvent('error', 'User login fail due to server error.  Please check API Server' + err);
                 errorMessage.textContent = "Login failed due to server error.";
             }
         });

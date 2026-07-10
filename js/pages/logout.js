@@ -12,13 +12,14 @@ export async function LogoutPage() {
             credentials: "include"
         });
         const result= await response.json();
-        if (result.error_code == 0) {
+        const responseJons = JSON.parse(result.response);
+        if (responseJons.error_code == 0) {
             // login successful
             msg= "Logout success.  Redirect to login page...";
 
         } 
         else {
-            msg = "Logout... " + (result.description|| "Unknown error") + ". Redirect to login page...";	
+            msg = "Logout... " + (responseJons.error_description || "Unknown error") + ". Redirect to login page...";	
             console.log(document.getElementById("main-app"));
 
         }
@@ -31,7 +32,6 @@ export async function LogoutPage() {
     
     // Trigger the redirect after 2 seconds so the user can read the message
     setTimeout(() => {
-        
         window.location.href = APP_ROOT + "/login";
     }, 2000);
 
