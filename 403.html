@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta charset="UTF-8">
+    <title>Credit Control Portal</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script type="module">
+        // Import your fetch function if it is defined in an external file, e.g.:
+        import { getSessionVariable } from "./js/auth/getSessionVariable.js";
+
+
+        try {
+            // 2. Safely await the asynchronous PHP API data
+            const variables = await getSessionVariable();
+            
+            // 3. Attach the frozen array to the window object for global availability
+            window.allowed_pages = Object.freeze(variables.allowed_pages || []);
+            window.username = variables.username;
+            window.force_change_pw = variables.force_change_pw;
+            window.group_name = variables.group_name;
+            window.latest_id_blacklist_file = variables.latest_id_blacklist_file;
+            
+            console.log("Global allowed_pages initialized:", window.allowed_pages);
+        } catch (error) {
+            console.error("Failed to load session variables:", error);
+            window.allowed_pages = Object.freeze([]);
+        }
+    </script>
+</head>
+<body>
+    <div class="d-flex">
+        <div id="vertical-navbar"></div>
+        
+        <div class="main">
+            <div id="header"></div>
+            
+            <main id="" style="flex: 1;">
+                <div class="container-fluid p-5">
+                    <strong>You don't have permission to load this page</stong>
+                </div>
+            </main>
+
+            <div id="footer"></div>
+        </div>
+        
+
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
