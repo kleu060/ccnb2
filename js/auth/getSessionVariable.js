@@ -2,7 +2,6 @@ import { API_BASE } from '../config.js';
 
 export async function getSessionVariable() {
     try {
-        console.log("auth");
         const response = await fetch(`${API_BASE}/getSessionVariables.php`, {
             method: 'GET',
             credentials: 'include'

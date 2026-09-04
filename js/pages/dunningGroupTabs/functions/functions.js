@@ -76,6 +76,21 @@ const columnsConfig = {
         { title: "Criteria", data: "criteria" },
         { title: "Remark", data: "remark" },
     ],
+    agent_management: [
+        {
+            title: "Action",
+            data: "action",
+            defaultContent: '<button class="btn btn-primary">Edit</button>'
+        },
+        {title: "User ID", data: "user_id"},
+        {title: "Name", data: "user_name"},
+        {title: "Full Name", data: "user_fullname"},
+        {title: "Caller ID", data: "caller_id"},
+        {title: "Caller Group", data: "callgroup_id"},
+        {title: "Team ID", data: "team"},
+        {title: "Status", data: "status"},
+        // {title: "create_date", data: "create_date"},
+    ]
     
 };
 
@@ -145,7 +160,7 @@ export async function loadDunningGroupTable(isEdit = false) {
         columnConfg = "dunning_group";
         instanceKey  = "read";
     }
-    // const dunningGroupStatus = dunningConstantJson.Status;
+    // const dunningGroupStatus = dunningConstantJson.Campaign.Status;
     const tmpData = await getDunningGroups();
     for (const dg of tmpData) {
         if ( isEdit ) {
@@ -273,7 +288,7 @@ export async function loadDunningVersionTable(dunningGroupId, dunningGroupPriori
     const body = {type};
     const url = `${API_BASE}/getMapping.php`;
     const dunningConstantJson  = await fetchAPI(url, body);
-    const dunningGroupStatus = dunningConstantJson.Status;
+    const dunningGroupStatus = dunningConstantJson.DunningVersion.Status;
     let data = [];
 
     if (Array.isArray(versions)) {
@@ -386,7 +401,67 @@ export async function loadCampaignListTable(isEdit) {
     });
 }
 
+export async function getUserForAgent() {
+    const url = `${API_BASE}/dunningGroup.php?endpoint=list_user_for_agent`;
+    const responseJson = await fetchAPI(url);
+    if ( responseJson.success == true ) {
+        return JSON.parse(responseJson.response);
+    }
+    else {
+        console.error("Failed to fetch Dunning Group Version data");
+    }
+} 
 
+
+async function getAgents () {
+
+    const url = `${API_BASE}/dunningGroup.php?endpoint=list_agent`;
+    const responseJson = await fetchAPI(url);
+    if ( responseJson.success == true ) {
+        return JSON.parse(responseJson.response);
+    }
+    else {
+        console.error("Failed to fetch Dunning Group Version data");
+    }
+}
+
+
+let agentManagementTable = null;
+export async function loadAgentManagementTable() {
+    const agents = await getAgents();
+    const tableName = "agent-management-table";
+
+    let data = [];
+    agents.forEach(function(agent) {
+        let tmp = {   
+            action: '<button class="btn btn-primary btn-edit-agent"' + 
+                    'data-agent-id="'+agent.id+'">Edit</button>',
+            user_id: agent.user_id,
+            user_name: agent.user_name,
+            user_fullname: agent.user_fullname,
+            caller_id: agent.caller_id,
+            callgroup_id: agent.callgroup_id,
+            team: agent.team,
+            status: agent.status
+        };
+        data.push(tmp);
+    });
+
+    if (agentManagementTable) {
+        agentManagementTable.destroy();
+        document.querySelector("#" + tableName + " tbody").innerHTML = "";
+        // document.querySelector("#user-management-table-header").innerHTML = "";
+    }
+
+    // Create new DataTable
+    agentManagementTable = new DataTable("#" + tableName, {
+        data: data,
+        columns: columnsConfig["agent_management"],
+        searching: false,
+        stateSave: true
+    });
+
+}
 
 
 

@@ -1,19 +1,28 @@
 import {  getGroups  } from "../functions/functions.js";
+import { API_BASE } from '../../../config.js';
+import { PAGES } from '../../../variables.js';
+import { fetchAPI } from '../../../api/fetch-api.js';
 
 export async function renderEditUserForm() {
 
     const groupList = await getGroups();
-        
     const groupOptions = Object.entries(groupList)
         .map(([key, value]) => {
+            // Extract exact uppercase keys from your PHP payload array
+            const groupId = value.ID;
+            const groupName = value.NAME;
+
             // Capitalise the first letter and lower-case the rest for a cleaner label
-            return `<option value="${value.group_id}">${value.group_name}</option>`;
+            const formattedLabel = groupName.charAt(0).toUpperCase() + groupName.slice(1).toLowerCase();
+
+            return `<option value="${groupId}">${formattedLabel}</option>`;
         })
         .join('');
 
     return `
         <div class="row" x-data="{ user: {} }" x-ref="userRow" @update-user.window="user = $event.detail">
             <div class="col-12">
+                <h1>Edit User</h1>
                 <div><button id="btn-edit-user-back" type="button" class="btn btn-secondary btn-edit-user-cancel">Back</button></div>
                 <form id="edit-user-form">
                     <input type="hidden" id="user-form-action" name="action" value="create" />

@@ -7,7 +7,7 @@ export async function renderDunningGroupCreateVersionForm() {
     const body = {type};
     const url = `${API_BASE}/getMapping.php`;
     const dunningConstantJson  = await fetchAPI(url, body);
-    const dunningGroupStatus = dunningConstantJson.Status;
+    const dunningGroupStatus = dunningConstantJson.Campaign.Status;
 
     // 1. Generate the options template string from the object values
     const statusOptionsHtml = Object.values(dunningGroupStatus)
@@ -26,7 +26,7 @@ export async function renderDunningGroupCreateVersionForm() {
                         <input type="hidden" id="create-dunning-group-version-dunning-id" name="dunning_id" value="" />
                         <input type="hidden" id="create-dunning-group-version-dunning-priority" name="priority" value="" />
                         <input type="hidden" id="create-dunning-group-version-dunning-name" name="name" value="" />
-                        <div class="col-6">
+                        <div class="col-10">
                             <div class="mb-1 field-group">
                                 <label>Version</label>
                                 <input type="text" name="version">

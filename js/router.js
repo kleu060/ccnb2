@@ -9,12 +9,13 @@ import { ChangePassword } from "./pages/change-password.js";
 import { Inquiry } from "./pages/inquiry.js";       //Page 2001
 import { CustomerSearch } from "./pages/customer.js";
 import { AccountInquiryMain } from "./pages/accountInquiryMain.js";
+import { account } from "./pages/account.js";
 import { KeyAccount } from "./pages/keyAccount.js";
 import { BlackListMain } from "./pages/blacklistMain.js";
-import { DunningGroupMain } from "./pages/dunningGrouptMain.js";
+import { DunningGroupMain } from "./pages/dunningGroupMain.js";
 import { DcaMain } from "./pages/DcaMain.js";
 import { DcaAgencyMain } from "./pages/DcaAgencyMain.js";
-import { Nod } from "./pages/Nod.js";
+import { NodMain } from "./pages/nodMain.js";
 import { CreditScore } from "./pages/CreditScore.js";
 import { Commission } from "./pages/Commission.js";
 import { DcaCommission } from "./pages/DcaCommission.js";
@@ -58,12 +59,13 @@ const routes = {
     [ APP_ROOT + "/inquiry" ]: { component: Inquiry, pageId: ['2001'] },
     [ APP_ROOT + "/customer-search" ]: { component: CustomerSearch, pageId: ['2002'] },
     [ APP_ROOT + "/account-inquiry" ]: { component: AccountInquiryMain, pageId: ['2003', '2004', '2005'] }, 
+    [ APP_ROOT + "/account" ]: { component: account}, 
     [ APP_ROOT + "/key-account" ]: { component: KeyAccount, pageId: ['3001'] },
     [ APP_ROOT + "/blacklist" ]: { component: BlackListMain, pageId: ['4001', '4002', '4003', '4004'] },
     [ APP_ROOT + "/dunning-group" ]: { component: DunningGroupMain, pageId: ['5001', '5002', '5003'] },
     [ APP_ROOT + "/dca" ]: { component: DcaMain, pageId: ['6001'] },
     [ APP_ROOT + "/dca-agency" ]: { component: DcaAgencyMain, pageId: ['6008'] },
-    [ APP_ROOT + "/nod" ]: { component: Nod, pageId: ['6003'] },
+    [ APP_ROOT + "/nod" ]: { component: NodMain, pageId: ['6003'] },
     [ APP_ROOT + "/credit-score" ]: { component: CreditScore, pageId: ['7001'] },
     [ APP_ROOT + "/commission"]: { component: Commission , pageId: ['8001'] },
     [ APP_ROOT + "/dca-commission" ]: { component: DcaCommission },
@@ -89,7 +91,6 @@ export async function router() {
         const loggedIn = await isLogin();
         console.log("is login: " + loggedIn);
         if ( !loggedIn ) {
-            console.log("here");
         
             document.getElementById("expire-container").style.display = "block";
             //access token expire;
@@ -142,7 +143,6 @@ export async function router() {
             return;
         }
     }
-    console.log("here");
 
     // Fallback to Home if route is not defined
     const routeComponent = routeConfig ? routeConfig.component : Login;
@@ -161,6 +161,7 @@ export async function router() {
 
     // Event listener
     if ( path == "/account-enquiry" ){
+
         const params = new URLSearchParams(window.location.search);
         const accountNo = params.get('account_code') || '';
         
@@ -173,6 +174,8 @@ export async function router() {
         loadCustomerTable();
     }
     else if ( path == "/blacklist" ){
+                console.log("blacklist event");
+
         loadBlacklistTable("{}");
         loadCtosTable("{}");
         loadInternalBlacklistTable();
@@ -189,20 +192,62 @@ export async function router() {
         })
     });
 
-    if (document.querySelector('.tomselect')) {
-        new TomSelect('.tomselect', {
-            create: true, // Allows users to create new items
+    const tomSelectElements = document.querySelectorAll(".tomselect");
+    tomSelectElements.forEach(el => {
+        new TomSelect(el, {
+            create: true, 
             sortField: {
                 field: 'text',
-                direction: 'asc'
-            }
+                direction: 'asc',
+                
+            },
+            createOnBlur: true,
         });
-    }
+    });
+
+    const tomSelectSingleElements = document.querySelectorAll(".tomselect-single");
+    tomSelectSingleElements.forEach(el => {
+        new TomSelect(el, {
+            create: false, 
+        });
+    });
+    // if (document.querySelector('.tomselect')) {
+    //     console.log("tomselect");
+    //     new TomSelect('.tomselect', {
+    //         create: true, // Allows users to create new items
+    //         sortField: {
+    //             field: 'text',
+    //             direction: 'asc'
+    //         },
+    //         createOnBlur: true
+    //     });
+    // }
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    // Get the current path from the browser window
+
+    menuItems.forEach(el => {
+        // 1. Find the anchor link inside or on the menu item
+        const addressElement = el.closest('a') || el.querySelector('a');
+        
+        if (addressElement) {
+            // 2. Use .pathname to get just the path (e.g., "/ccnb2/print") 
+            // to avoid domain mismatch issues with full .href strings
+            const addressElementPath = addressElement.pathname;
+            
+            el.classList.remove("active");
+            
+            // 3. Use .includes() for string matching
+            if (path.includes(addressElementPath)) {
+                el.classList.add("active");
+            }
+        }
+    });
+
 
 }
 
 document.addEventListener('alpine:init', async () => {
-    console.log("here");
     // Registering the global store
     Alpine.store('user_data', {
         username: '',

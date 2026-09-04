@@ -22,7 +22,7 @@ export async function rendorAgentUpdateSection() {
         .join('');
 
     return `
-        <div class="card">
+        <div class="card bg-light-grey" >
             <div class="card-body">
                 <div class="mb-4">
                     <div class="row row-cols-2 row-cols-lg-3">
@@ -77,12 +77,10 @@ export async function rendorAgentUpdateSection() {
                         </div>
 
                         <div class="col">
+                            
+                            <label class="">Contact Number</label>
                             <div class="field-group">
-                                <label class="">Contact Type</label>
                                 <form id="agent-update-contact-type-form">
-                                    <select name="select-contact-type" id="select-contact-type">
-                                        ${contactOptions}
-                                    </select>
                                     <div class="d-flex">
                                         <input type="text" name="contact-value" id="contact-value" class="me-1"/>
                                         <button type="submit" name="submit-contact-type" class="btn btn-primary">Add</button>

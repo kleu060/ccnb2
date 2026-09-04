@@ -2,7 +2,6 @@ import { API_BASE } from '../config.js';
 
 export async function isLogin() {
     try {
-        console.log("auth");
         const response = await fetch(`${API_BASE}/index.php?endpoint=checktoken`, {
             method: "POST",
             headers: {

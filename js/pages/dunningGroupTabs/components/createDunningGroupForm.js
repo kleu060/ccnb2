@@ -1,6 +1,8 @@
 import { API_BASE } from '../../../config.js';
 import { fetchAPI } from '../../../api/fetch-api.js';
 
+import TomSelect from 'tom-select';
+
 export async function renderCreateDunningGroupForm() {
     const html = `
         <div class="create-dunning-group-form-form">
@@ -10,7 +12,8 @@ export async function renderCreateDunningGroupForm() {
                     <form id="create-dunning-group-form">
                         <div class="mb-1 field-group">
                             <label>Dunning Group Name</label>
-                            <select id="select-dunning-group-name" name="name" class="tomselect">
+                            <select id="select-dunning-group-name" name="name" class="tomselect col-3">
+                                <option value="">-- Enter Dunning Group Name --</option>
                                 <option value="Mass_Mgmt">Mass_Mgmt</option>
                                 <option value="Mass_VVIP">Mass_VVIP</option>
                                 <option value="Remaining VIP Account">Remaining VIP Account</option>
@@ -40,7 +43,6 @@ export async function renderCreateDunningGroupForm() {
                         <div class="row">
                             <div>
                                 <input type="submit" class="btn btn-primary">
-                                <button type="button" class="btn btn-secondary" id="btn-create-dunning-group-form-back">Back</button>
                             </div>
                         </div>
 
@@ -76,12 +78,24 @@ export async function renderCreateDunningGroupForm() {
                 }
             }
             else {
-                // const result = JSON.parse(response.response);
-                createDunningGroupFormErrorMessage.innerHTML = "User fail to create.  "  + response.response.error_description + "(" + response.response.error_code+ ")";;
+                const result = JSON.parse(response.response);
+                createDunningGroupFormErrorMessage.innerHTML = "Dunning Group fail to create.  "  + result.error_description + "(" + result.error_code+ ")";;
             }
         })
 
-    },500)
+        // if (document.querySelector('.tomselect')) {
+                
+        //     new TomSelect('.tomselect', {
+        //         create: true, // Allows users to create new items
+        //         sortField: {
+        //             field: 'text',
+        //             direction: 'asc'
+        //         },
+        //         createOnBlur: true
+        //     });
+        // }
+
+    },1000)
 
     return html;
 }

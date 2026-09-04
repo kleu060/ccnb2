@@ -32,7 +32,6 @@ export async function renderUserManagementTab() {
 
             await loadUserTable(groupList);
 
-
             const btnCreateUser = document.getElementById('btn-create-user');
             const userManagementSection = document.getElementById('user-management-section');
             const userManagementEditFormSection = document.getElementById('user-management-edit-form');
@@ -50,19 +49,24 @@ export async function renderUserManagementTab() {
 
             userManagementEditFormSection.addEventListener('submit', async(e) => {
                 e.preventDefault();
+                editFormErrorMessage.innerHTML = "";
 
                 const formData = new FormData(editUserForm);
                 const body = Object.fromEntries(formData.entries());
                 
-                let url;
+                let url, successMessage, errorMessage;
                 const currentAction = body.action; 
                 if ( currentAction == "create" ) {
-                    console.log("user add");
                     url = `${API_BASE}/user.php?endpoint=add_user`;
+                    successMessage = "User successfully created.";
+                    errorMessage = "User fail to create.";
+
+                    
                 }
                 else {
-                    console.log("user edit");
                     url = `${API_BASE}/user.php?endpoint=edit_user`;
+                    successMessage = "User successfully updated.";
+                    errorMessage = "User fail to update.";
                 }
 
                 const response = await fetchAPI(url, body);
@@ -72,10 +76,10 @@ export async function renderUserManagementTab() {
                 if ( response.success  ) {
                     const result = JSON.parse(response.response);
                     if ( result.error_code == 0) {
-                        editFormErrorMessage.innerHTML = "User successfully created";
+                        editFormErrorMessage.innerHTML = successMessage;
                     }
                     else {
-                        editFormErrorMessage.innerHTML = "User fail to create. " + response.response.error_description + "(" + response.response.error_code+ ")";
+                        editFormErrorMessage.innerHTML = errorMessage + response.response.error_description + "(" + response.response.error_code+ ")";
                     }
                 }
                 else {
@@ -86,14 +90,16 @@ export async function renderUserManagementTab() {
 
             btnCreateUser.addEventListener('click', (e) => {
                 userFormAction.value="create";
+                
+                editFormErrorMessage.innerHTML = "";
                 userIdInput.value = "";
                 userNameInput.readOnly = false;
                 editFormForceLogout.classList.add("d-none");
                 editFormFirstLogin.classList.add("d-none");
                 editFormLockUser.classList.add("d-none");
-                editUserFormPassword.classList.remove("d-none");
+                // editUserFormPassword.classList.remove("d-none");
                 editUserFormPassword.value = "";
-
+                
                 clearUserData();
 
                 userManagementSection.classList.add("d-none");
@@ -109,13 +115,14 @@ export async function renderUserManagementTab() {
                     if (btn) {
                         const userId = btn.getAttribute('data-user-id');
 
+                        editFormErrorMessage.innerHTML = "";
                         userFormAction.value="edit";
                         userIdInput.value = userId;
                         userNameInput.readOnly = true;
                         editFormForceLogout.classList.remove("d-none");
                         editFormFirstLogin.classList.remove("d-none");
                         editFormLockUser.classList.remove("d-none");
-                        editUserFormPassword.classList.add("d-none");
+                        // editUserFormPassword.classList.add("d-none");
                         editUserFormPassword.value = "";
                         
                         userManagementSection.classList.add("d-none");
@@ -132,12 +139,13 @@ export async function renderUserManagementTab() {
 
             const backButton = document.querySelectorAll('.btn-edit-user-cancel');
             backButton.forEach(button => {
-                button.addEventListener('click', (e) => {
+                button.addEventListener('click', async (e) => {
                     e.preventDefault();
                     userManagementSection.classList.remove("d-none");
                     userManagementEditFormSection.classList.add("d-none");
                     
                     clearUserData();
+                    await loadUserTable(groupList);
                 });
             });
 

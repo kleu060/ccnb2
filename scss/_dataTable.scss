@@ -2,7 +2,41 @@
     tr {
         th, td {
             padding: 5px;
-            border: 1px solid $black;
+            border: 0px;
+        }
+
+        th {
+            font-weight: bold;
+            background-color: $light-blue;
+            color: $blue;
+
+            &.dt-ordering-asc {
+                &::after {
+                    background-color: white;
+                }
+            }
+
+            &.dt-ordering-desc {
+                &::after {
+                    background-color: white;
+                }
+            }
+
+            &.dt-type-numeric, &.dt-type-date {
+                div.dt-column-header {
+                    flex-direction: row;
+
+                    .dt-column-title {
+                        flex-grow: unset;
+                    }
+                }
+            }
+        }
+
+        td {
+            &.dt-type-numeric {
+                text-align: left;
+            }
         }
     }
 }

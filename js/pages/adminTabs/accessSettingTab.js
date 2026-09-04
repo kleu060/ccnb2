@@ -10,7 +10,14 @@ export async function renderAccessSettingTab() {
     // console.log(JSON.parse(groups.response));
     // console.log(JSON.parse(groupAccess.response));
 
-    const groups =  await getGroups();
+    // const type = "User";
+    // const body = {type};
+    // const url = `${API_BASE}/getMapping.php`;
+    // const UserConstantJson  = await fetchAPI(url, body);
+    // const userGroups = UserConstantJson.Group;
+
+
+    const userGroups =  await getGroups();
     const groupAccess = await getGroupAccess();  
 
     console.log("group access");
@@ -19,7 +26,7 @@ export async function renderAccessSettingTab() {
     // const groups = [];
     // const groupAccess = [];
     const html =  `
-        <div class="tab-pane fade" id="access-setting-tab" role="tabpanel" aria-labelledby="access-setting-tab">
+        <div class="tab-pane fade" id="access-setting-tab" role="tabpanel" aria-labelledby="access-setting-tab" style="overflow:auto;">
             <div class="alert alert-primary d-none" id="update-access-list-response-message">
             </div>
             <table class="table" id="access-list-table">
@@ -33,38 +40,48 @@ export async function renderAccessSettingTab() {
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Loop through your Groups data array to create rows -->
-                    ${groups.map((group) => {
-                        // Find the matching permission list for the current group row
-                        const matchingAccess = groupAccess.find(access => access.group_id === group.group_id);
-                        // const assignedPages = matchingAccess ? matchingAccess.page_code : [];
+                    <!-- Object.entries breaks down the 'Group' object into [key, data] pairs -->
+                    ${Object.entries(userGroups).map(([groupKey, groupData]) => {
+                        const groupId = groupData.ID;
+                        const groupName = groupData.NAME;
+
+                        // Find matching permission list using the numerical ID
+                        const matchingAccess = groupAccess.find(access => access.group_id === groupId);
+                        
+                        // Force string conversion for robust inclusion check against PAGES object keys
                         const assignedPages = matchingAccess ? matchingAccess.page_code.map(String) : [];
 
                         return `
-                            <tr>
-                                <th scope="row">${group.group_name}</th>
-                                <!-- Loop through the same PAGES keys to build matching columns -->
-                                ${Object.entries(PAGES).map(([pageCode, pageName]) => {
-                                    // Check if the current page code exists in the group's permission array
-                                    const isChecked = assignedPages.includes(pageCode) ? 'checked' : '';
-                                    
-                                    return `
-                                        <td>
-                                            <input 
-                                                type="checkbox" 
-                                                id="access-${group.group_id}-${pageCode}" 
-                                                data-group-id="${group.group_id}" 
-                                                data-page-code="${pageCode}"
-                                                ${isChecked}
-                                                class="chk-access-group-${group.group_id}" 
-                                            />
-                                        </td>
-                                    `;
-                                }).join('')}
+                        <tr>
+                            <th scope="row">${groupName}</th>
+                            
+                            <!-- Loop through PAGES keys to build matching checkbox columns -->
+                            ${Object.entries(PAGES).map(([pageCode, pageName]) => {
+                                const isChecked = assignedPages.includes(String(pageCode)) ? 'checked' : '';
+                                
+                                return `
                                 <td>
-                                    <button type="button" class="btn-update-access-list btn btn-primary" data-group-id="${group.group_id}">Update</button>
+                                    <input 
+                                        type="checkbox" 
+                                        id="access-${groupId}-${pageCode}" 
+                                        data-group-id="${groupId}" 
+                                        data-page-code="${pageCode}" 
+                                        ${isChecked} 
+                                        class="chk-access-group-${groupId}" 
+                                    />
                                 </td>
-                            </tr>
+                                `;
+                            }).join('')}
+                            
+                            <td>
+                                <button 
+                                    type="button" 
+                                    class="btn-update-access-list btn btn-primary" 
+                                    data-group-id="${groupId}">
+                                    Update
+                                </button>
+                            </td>
+                        </tr>
                         `;
                     }).join('')}
                 </tbody>

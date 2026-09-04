@@ -22,7 +22,7 @@ async function getUsers() {
 }
 
 export async function loadUserTable(groups) {
-
+    console.log(groups);
     const columnsConfig = {
         users: [
             {
@@ -46,11 +46,11 @@ export async function loadUserTable(groups) {
                 title: "Group", 
                 data: "group_id",
                 render: function (data, type, row) {
-                    // Find the group object matching the current row's group_id
-                    const matchedGroup = groups.find(g => g.group_id == data);
+                    // Look up the description inside the constant map, not the user list
+                    const matchedGroup = Object.values(groups).find(g => g.ID == data);
                     
-                    // Return the group_name if found, otherwise fall back to the raw data/ID
-                    return matchedGroup ? matchedGroup.group_name : (data || "No Group");
+                    // Use capitalized key .DESCRIPTION as returned by your PHP API
+                    return matchedGroup ? matchedGroup.NAME : (data || "No Group");
                 }
             },
             { title: "Last Login", data: "last_login_time" },

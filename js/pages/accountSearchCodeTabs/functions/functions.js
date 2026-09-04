@@ -18,11 +18,15 @@ export async function accCodeFormSubmit(tab) {
     let fetchResult = await getAccount(searchType, accCode);
     console.log(fetchResult);
 
-    let actions = getAccountActionHistory(accCode);
+    console.log("acc_code: " + fetchResult.acc_code)
+    console.log("acc_id: " + fetchResult.acc_id)
+    const actions = await getAccountActionHistory(fetchResult.acc_id);
+
+    console.log(actions);
     
     if (!isEmptyFetchResult(fetchResult))  {
         updateAccountData(fetchResult);
-        updateActionData(actions);
+        updateActionData(actions.result);
         
         document.getElementById(tab + "-account-code-no-result-container").classList.add("d-none");
         document.getElementById(tab + "-account-code-result-container").classList.remove("d-none");
@@ -43,19 +47,22 @@ export async function accIdFormSubmit(tab) {
     document.getElementById(tab + "-account-enquiry-acc-code-form-acc-code").value = "";
     const selectAccountCodeSubInfo = document.getElementById(tab + "-select-account-code-sub-info");
 
-
     selectAccountCodeSubInfo.value = "";
     selectAccountCodeSubInfo.selectedIndex = 0;
     selectAccountCodeSubInfo.dispatchEvent(new Event('change', { bubbles: true }));
 
     let fetchResult = await getAccount(searchType, accId);
     console.log(fetchResult);
-    
-    let actions = getAccountActionHistory(fetchResult.acc_code);
+
+    console.log("acc_code: " + fetchResult.acc_code)
+    console.log("acc_id: " + fetchResult.acc_id)
+    const actions = await getAccountActionHistory(fetchResult.acc_id);
+
+    console.log(actions);
 
     if (!isEmptyFetchResult(fetchResult))  {
         updateAccountData(fetchResult);
-        updateActionData(actions);
+        updateActionData(actions.result);
         
         document.getElementById(tab + "-account-code-no-result-container").classList.add("d-none");
         document.getElementById(tab + "-account-code-result-container").classList.remove("d-none");
@@ -109,6 +116,8 @@ function isEmptyFetchResult(v) {
 function clearAccountData() {
     window.dispatchEvent(new CustomEvent('update-account', {
         detail: {
+            name: "",
+            identity_id: "",
             acc_code: "",
             cust_id: "",
             acc_id: "",
@@ -139,19 +148,21 @@ function updateAccountData(account) {
     console.log(account);
     window.dispatchEvent(new CustomEvent('update-account', {
         detail: {
+            name: account.name ?? "Chan Tai Meng",
+            identity_id: account.identity_id ?? "730212345678",
             acc_code: account.acc_code,
             cust_id: account.cust_id,
             acc_id: account.acc_id,
-            acc_create_date: account.acc_create_date,
+            acc_create_date: account.acc_create_date ? account.acc_create_date.split(' ')[0] : account.acc_create_date,
             parent_acc_id: account.parent_acc_id,
             status: account.status,
-            status_date: account.status_date,
+            status_date: account.status_date ? account.status_date.split(' ')[0] : account.status_date,
             writeoff: account.writeoff,
             overdue_amt: account.overdue_amt,
             dunning_grp: account.dunning_grp,
             npsi: account.npsi,
             os_bal: account.os_bal,
-            last_pay_date: account.last_pay_dte,
+            last_pay_date: account.last_pay_date ? account.last_pay_date.split(' ')[0]: account.last_pay_date,
             bill_cycle: account.bill_cycle,
             credit_limit: account.credit_limit,
             payment_mode: account.payment_mode,

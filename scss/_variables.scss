@@ -1,6 +1,18 @@
-$verticalNavbarWidth: 50px;
+$verticalNavbarWidth: 160px;
+$mainContentWidth: 96%;
 
 $black: #000000;
-$blue: #1e1ee6;
-$blue-800: #001A74;
+$light-blue: #bcd9f4;
+$blue: #001871;
+$bright-blue: #0064dc;
 $red: #ff0000;
+$light-grey: #c0c0c0;
+$dark-grey: #151b26;
+
+
+/* Boostrap Card Color */
+$card-color: $blue; 
+
+// 2. Override Bootstrap pagination variables
+$pagination-active-bg: $bright-blue;
+$pagination-active-border-color: $bright-blue;

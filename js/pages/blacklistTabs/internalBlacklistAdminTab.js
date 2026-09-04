@@ -204,43 +204,29 @@ export async function renderInternalBlackListAdminTab() {
                 formData.append("requester", userType);
 
 
+                // Create an AbortController instance
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds
+
                 const url = `${API_BASE}/index.php?endpoint=id_blacklist_excel_upload`;
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: formData,
-                    credentials: "include"
-                });
-                const result = await response.json();
-                // const result = await fetchAPI(url, formData);
-
-
-
-
-                const inner = JSON.parse(result.response);
-                internalBlackListBulkUploadLoading.classList.add("d-none");
-                if ( !result.success ) {
-
-                    if ( inner.error_code == 2) {
-                        document.getElementById("expire-container").style.display = "block";
-                        //access token expire;
-                        setTimeout(function(){
-                            document.getElementById("expire-container").style.display = "none";
-                            window.location.href="/ccnb2/login?msg=Access token expired";
-                        }, 3000);
-                    }
-
-                    internalBlacklistBulkUploadResponse.innerHTML = inner.error_description;
-                    internalBlacklistBulkUploadResponse.classList.add("invalid");
+                
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        body: formData,
+                        credentials: "include",
+                        signal: controller.signal // Pass the abort signal here
+                    });
                     
-                    
-                }
-                else {
-                    if ( inner.error_code == 0) {
-                        internalBlacklistBulkUploadResponse.innerHTML = "Excel file uploaded successfully";
-                        internalBlacklistBulkUploadResponse.classList.add("valid");
+                    // Clear the timeout if the request completes successfully
+                    clearTimeout(timeoutId);
 
-                    }
-                    else {
+                    const result = await response.json();
+                    // const result = await fetchAPI(url, formData);
+
+                    const inner = JSON.parse(result.response);
+                    internalBlackListBulkUploadLoading.classList.add("d-none");
+                    if ( !result.success ) {
 
                         if ( inner.error_code == 2) {
                             document.getElementById("expire-container").style.display = "block";
@@ -250,10 +236,51 @@ export async function renderInternalBlackListAdminTab() {
                                 window.location.href="/ccnb2/login?msg=Access token expired";
                             }, 3000);
                         }
-                        
+
                         internalBlacklistBulkUploadResponse.innerHTML = inner.error_description;
                         internalBlacklistBulkUploadResponse.classList.add("invalid");
+                        
+                        
                     }
+                    else {
+                        if ( inner.error_code == 0) {
+                            internalBlacklistBulkUploadResponse.innerHTML = "Excel file uploaded successfully";
+                            internalBlacklistBulkUploadResponse.classList.add("valid");
+
+                        }
+                        else {
+
+                            if ( inner.error_code == 2) {
+                                document.getElementById("expire-container").style.display = "block";
+                                //access token expire;
+                                setTimeout(function(){
+                                    document.getElementById("expire-container").style.display = "none";
+                                    window.location.href="/ccnb2/login?msg=Access token expired";
+                                }, 3000);
+                            }
+                            
+                            internalBlacklistBulkUploadResponse.innerHTML = inner.error_description;
+                            internalBlacklistBulkUploadResponse.classList.add("invalid");
+                        }
+                    }
+                    console.log(result);
+
+                } catch (error) {
+                    // Clear timeout to prevent memory leaks
+                    clearTimeout(timeoutId);
+                    
+                    // Hide loading spinner
+                    internalBlackListBulkUploadLoading.classList.add("d-none");
+                    // Style the response text as invalid (usually red)
+                    internalBlacklistBulkUploadResponse.classList.add("invalid");
+
+                    if (error.name === 'AbortError') {
+                        // User retry notification text
+                        internalBlacklistBulkUploadResponse.innerHTML = "The request timed out after 30 seconds. Please try uploading your file again.";
+                    } else {
+                        internalBlacklistBulkUploadResponse.innerHTML = "A network error occurred. Please check your connection and retry.";
+                    }
+                    console.error("Upload error details:", error);
                 }
                 console.log(result);
             })

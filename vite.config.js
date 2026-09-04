@@ -9,6 +9,14 @@ export default defineConfig({
         host: '0.0.0.0',  
         port: 5173,
         strictPort: true,
+        // hmr: {
+        //     protocol: 'ws',
+        //     host: '192.168.82.181', // 👈 The browser will use your Apache IP
+        //     clientPort: 80,         // 👈 Connects over standard port 80
+        //     path: 'ccnb2/'          // 👈 Matches your base folder layout
+        // },
+                hmr: false, // 👈 1. Completely disables the WebSocket client connection
+
     },
     css: {
         devSourcemap: true

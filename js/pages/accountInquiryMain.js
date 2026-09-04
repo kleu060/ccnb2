@@ -1,8 +1,12 @@
 // main.js or account-code-search.js
 import { getAccount, getAccountActionHistory } from "../api/account-api.js";
-import { renderAccountTab } from "./accountSearchCodeTabs/accountCodeTab.js";
-import { renderAgentSummaryTab } from "./accountSearchCodeTabs/agentSummaryTab.js";
-import { renderAgentUpdateTab  } from "./accountSearchCodeTabs/agentUpdateTab.js";
+import { renderAccountTab } from "./accountSearchCodeTabs/accountTab.js";
+import { renderCollectTab } from "./accountSearchCodeTabs/collectTab.js";
+import { renderUpdateTab } from "./accountSearchCodeTabs/updateTab.js";
+
+// import { renderUpdateTab  } from "./accountSearchCodeTabs/collectTab.js";
+// import { renderAgentSummaryTab } from "./accountSearchCodeTabs/agentSummaryTab.js";
+
 // import { renderAgentUpdateTab, initAgentUpdateTab } from "./tabs/agent-update-tab.js";
 // import { renderAgentSummaryTab, initAgentSummaryTab } from "./tabs/agent-summary-tab.js";
 import { logEvent } from '../logEvent.js';
@@ -12,9 +16,10 @@ export async function AccountInquiryMain() {
     logEvent('info', 'Visit Account Inquiry page');
 
     const allowedPages = window.allowed_pages;
-    const hasAccountAccess = allowedPages.includes('2003');
-    const hasAgentUpdateAccess = allowedPages.includes('2004');
-    const hasAgentSummaryAccess = allowedPages.includes('2005');
+    const hasAccountAccess = allowedPages.includes('2003');   
+    const hasCollectAccess = allowedPages.includes('2004');     //Collect
+    // const hasAgentSummaryAccess = allowedPages.includes('2004');    //Update
+    const hasUpdateAccess = allowedPages.includes('2005');          //Update
 
 
     // Get account_no from query string
@@ -30,22 +35,24 @@ export async function AccountInquiryMain() {
            </li>`
         : '';
     
-    const agentUpdateTab = hasAgentUpdateAccess
+    const collectTab = hasCollectAccess
         ?   `<li class="nav-item" role="presentation">
-                <button class="nav-link" id="btn-agent-update-tab" data-bs-toggle="tab" data-bs-target="#agent-update-tab" type="button" role="tab" aria-controls="agent-update-tab" aria-selected="false" data-parent="Account Inquiry">Agent Update</button>
+                <button class="nav-link" id="btn-collect-tab" data-bs-toggle="tab" data-bs-target="#collect-tab" type="button" role="tab" aria-controls="collect-tab" aria-selected="false" data-parent="Account Inquiry">Collect</button>
             </li>`
         : '';
 
-    const agentSummaryTab = hasAgentSummaryAccess 
+    const updateTab = hasUpdateAccess 
         ?  `<li class="nav-item" role="presentation">
-                <button class="nav-link" id="btn-agent-summary-tab" data-bs-toggle="tab" data-bs-target="#agent-summary-tab" type="button" role="tab" aria-controls="agent-summary-tab" aria-selected="false" data-parent="Account Inquiry">Agent Summary</button>
+                <button class="nav-link bg-light-grey" id="btn-update-tab" data-bs-toggle="tab" data-bs-target="#update-tab" type="button" role="tab" aria-controls="update-tab" aria-selected="false" data-parent="Account Inquiry">Update</button>
             </li>`
         : '';
     
     // Render all tabs content
     const accountTabHtml = hasAccountAccess ? await renderAccountTab() : '';
-    const agentUpdateTabHtml = hasAgentUpdateAccess ? await renderAgentUpdateTab() : '';
-    const agentSummaryTabHtml = hasAgentSummaryAccess ? await renderAgentSummaryTab() : '';
+    const collectHtml = hasCollectAccess ? await renderCollectTab() : '';
+    const updateHtml = hasUpdateAccess ? await renderUpdateTab() : '';
+    // const agentUpdateTabHtml = hasAgentUpdateAccess ? await renderAgentUpdateTab() : '';
+    // const updateHtml = hasUpdateAccess ? await renderUpdateTab() : '';
 
     return `
         <section class="container-fluid account-code-section">
@@ -54,8 +61,9 @@ export async function AccountInquiryMain() {
                 <div class="col">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         ${accountTab}
-                        ${agentUpdateTab}
-                        ${agentSummaryTab}                        
+                        ${collectTab}
+                        ${updateTab}
+               
                     </ul>
                 </div>
             </div>
@@ -64,8 +72,8 @@ export async function AccountInquiryMain() {
             <div class="tab-content" id="AccountTabContent">
 
                 ${accountTabHtml}
-                ${agentUpdateTabHtml}
-                ${agentSummaryTabHtml}                
+                ${collectHtml}
+                ${updateHtml}
             </div>
         </section>
     `;

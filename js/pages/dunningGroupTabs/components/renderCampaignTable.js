@@ -8,7 +8,6 @@ export async function renderCampaignTable(isEdit = false) {
     }
 
     const html =  `
-
             <h1>Campaign List</h1>
             <div class="row">
                 <div class="col-12">
@@ -24,5 +23,5 @@ export async function renderCampaignTable(isEdit = false) {
             loadCampaignListTable(isEdit);
         }, 500);
     
-        return html
+        return html;
 }

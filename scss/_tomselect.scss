@@ -1,7 +1,29 @@
 .ts-wrapper {
     min-height: unset !important;
+
+    &.single {
+        .ts-control {
+            background-image: none !important;
+            background-color: white !important;
+            box-shadow: none !important;
+            // border: 1px solid #fefefe
+        }
+    }
+
     .ts-control {
         align-items: center;
         padding: 0px 4px;
+        border: 0;
+        // flex-wrap: nowrap;
+
+        > * {
+            white-space: nowrap;
+        }
     }
 }
+
+#account-select-account-code-sub-info-opt-5, #account-select-account-code-sub-info-opt-6, #account-select-account-code-sub-info-opt-7 {
+    background-color: red;
+}
+
+

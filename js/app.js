@@ -16,21 +16,29 @@ import { renderVerticalNavBar } from "./components/vertical-navbar.js";
 import { renderHeader } from "./components/header.js";
 import { renderFooter } from "./components/footer.js";
 import { router } from "./router.js";
+import { APP_ROOT } from "./config.js";
 import { API_BASE } from './config.js';
 import { getSessionVariable } from "./auth/getSessionVariable.js";
 
 
-
+const path = window.location.pathname;
 
 /* import functions */
 const header =  document.getElementById("header");
 if ( header ) {
     header.innerHTML = renderHeader();
 }
+
 document.getElementById("footer").innerHTML = renderFooter();
+
 const verticalNavBar = document.getElementById("vertical-navbar");
-if (verticalNavBar) {
-    verticalNavBar.innerHTML = await renderVerticalNavBar();
+if ( path.trim() !=  APP_ROOT + "/account" ) {
+    if (verticalNavBar) {
+        verticalNavBar.innerHTML = await renderVerticalNavBar();
+    }
+}
+else {
+    verticalNavBar.style.display = "none";
 }
 
 const id = 'menu-item-' + window.location.pathname.replace('/', '');

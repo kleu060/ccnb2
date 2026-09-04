@@ -13,7 +13,7 @@ let activeAssignmentListTable = null;
 const columnsConfig = {
     activeListAssignment: [
         { title: "Customer name", data: "customer_name" },
-        // { title: "ID Number", data: "id_number" },
+        { title: "Customer ID", data: "customer_id" },
         {
             title: "Account Code",
             data: "account_code",
@@ -25,8 +25,9 @@ const columnsConfig = {
             }
         },
         { title: "MSISDN", data: "msisdn" },
-        { title: "Invoice Number", data: "invoice_number" },
         { title: "ICCID", data: "iccid" },
+        { title: "Outstanding Balance", data: "outstanding_balance" },
+        { title: "Aging Balance", data: "aging_balance" },
     ]
 };
 

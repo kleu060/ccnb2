@@ -1,4 +1,64 @@
+
+
 export const mockData = {
+    aging_bucket :[
+        {
+            current: '0',
+            aging_30: '0',
+            aging_60: '0',
+            aging_90: '0',
+            aging_120: '0',
+            aging_150: '0',
+            aging_180: '0',
+            over_180: '0',
+        }
+    ],
+
+    blacklist_history : [
+        {
+            account_code: "30002292920",
+            id_number: "38219011234",
+            ctos_blacklist: "0",
+            etr_blacklist: "0",
+            date: "2026-01-01 10:00:00",
+        }
+    ],
+    contact: [
+        {
+            contact_type: "Mobile Phone",
+            contact_info: "12340000",
+            status: "current",
+            updated_by: "V129902",
+            update_date: "2026001",
+            result_code: "0",
+        }
+    ],
+    contact_edit: [
+        {
+            action: '<button class="btn btn-primary btn-edit-agent">Edit</button>',
+            contact_type: "Mobile Phone",
+            contact_info: "12340000",
+            status: "current",
+            updated_by: "V129902",
+            update_date: "2026001",
+            result_code: "0",
+        }
+    ],
+
+    agents: [
+        {
+            action: '<button class="btn btn-primary btn-edit-agent">Edit</button>',
+            id: '1',
+            name: 'v07662x',
+            full_name: 'kwleung', 
+            caller_id: 'v07662x',
+            caller_group: '1',
+            team_id: '6',
+            status: '1',
+            create_date: '2/1',
+            
+        }
+    ],
     campaigns: [
         {   
             
@@ -316,6 +376,52 @@ export const mockAdjustmentData = {
         },
     ]
 };
+
+export const customerMockData = {
+    data: [
+        {
+            account_code: '<a href="/account-inquiry?account_code=5000001920789">5000001920789</a>',
+            account_id: '100000000000377548',
+            subscribe_id: '',
+            parent_acct_id: '',
+            acct_status: '',
+            billing_flag: '0',
+            credit_limit: '500',
+            outstanding: '0',
+        }
+    ]
+}
+
+export const customerContactMockData = {
+    data: [
+        {
+            contact_type: 'mobile phone',
+            contact_info: '12340000',
+            status: 'current',
+            updated_by: 'migration',
+            update_date: '2026-01',
+
+        },
+        {
+            contact_type: 'mobile phone',
+            contact_info: '12340000',
+            status: 'current',
+            updated_by: 'migration',
+            update_date: '2026-01',
+
+        },
+        {
+            contact_type: 'mobile phone',
+            contact_info: '12340000',
+            status: 'current',
+            updated_by: 'migration',
+            update_date: '2026-01',
+
+        }
+    ]
+}
+
+
 
 export const activeListAssignmentMockData = {
     data: [

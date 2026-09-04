@@ -6,6 +6,7 @@ export async function renderEditDunningGroupForm() {
             <div class="mb-1 field-group">
                 <label>Dunning Group Name</label>
                 <select id="select-dunning-group-name-edit" name="name" class="tomselect">
+                    <option value="">-- Enter Dunning Group Name --</option>
                     <option value="Mass_Mgmt">Mass_Mgmt</option>
                     <option value="Mass_VVIP">Mass_VVIP</option>
                     <option value="Remaining VIP Account">Remaining VIP Account</option>
@@ -22,7 +23,6 @@ export async function renderEditDunningGroupForm() {
             <div class="mb-1 field-group">
                 <label>Priority</label>
                 <input type="text" name="priority" id="dunning-group-priority-edit" value=""/>
-
             </div>
 
             <div class="mb-1 field-group">

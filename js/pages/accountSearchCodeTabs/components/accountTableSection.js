@@ -1,15 +1,20 @@
 export async function rendorAccountTableSection(tab) {
     return `
         <div class="mb-4">
-            <div class="row row-cols-2 row-cols-lg-4">
-                <div class="col">
-                    <select name="select-account-code-sub-info" id="${tab}-select-account-code-sub-info">
-                        <option value="">Please select</option>
-                        <option value="subscriber">Subscriber</option>
-                        <option value="dca">DCA</option>
-                        <option value="invoice">Invoice</option>
-                        <option value="payment">Payment</option>
-                    </select>
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-control">
+                        <select name="select-account-code-sub-info" class="tomselect-single" id="${tab}-select-account-code-sub-info">
+                            <option value="">Please select</option>
+                            <option value="subscriber">Subscriber</option>
+                            <option value="invoice">Invoice</option>
+                            <option value="payment">Payment</option>
+                            <option value="collection">Collection</option>
+                            <option value="aging_bucket" class="dummy">Aging Bucket</option>
+                            <option value="blacklist_history">Blacklist History</option>
+                            <option value="contact">Contact</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="row">

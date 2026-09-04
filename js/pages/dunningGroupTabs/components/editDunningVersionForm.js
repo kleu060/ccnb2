@@ -14,7 +14,7 @@ export async function renderEditDunningVersionForm() {
     const DunningJson  = await fetchAPI(url, body);
     const DunningOperators  = DunningJson.OPERATORS;
     const dunningCriteria = DunningJson.CRITERIA;
-    const dunningStatus = DunningJson.Status;
+    const dunningStatus = DunningJson.DunningVersion.Status;
     const dunningNPSI = DunningJson.NPSI;
 
     let statusOptions = Object.values(dunningStatus).map(status => `
@@ -37,7 +37,7 @@ export async function renderEditDunningVersionForm() {
                 <input type="checkbox" class="crit-enable-checkbox" name="criteria[${criteria.ID}][enable]" id="crit-${criteria.ID}"/>
             </div>
             <div class="col-3 d-flex align-items-center">
-                ${criteria.DISPLAY}
+                ${criteria.DISPLAY} 
             </div>
             <div class="col-3 d-flex align-items-center">
                 <select class="" class="crit-operators-select" name="criteria[${criteria.ID}][option]" id="crit-${criteria.ID}-option">
@@ -46,12 +46,35 @@ export async function renderEditDunningVersionForm() {
                 </select>
             </div>
             <div class="col-4">
-                ${criteria.ID == 9 ?   
-                    `<select multiple class="tomselect criteria-values no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
-                        ${npsiOptions}
-                    </select>
-                    `
-                    : `<input type="text" class="tomselect criteria-values" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">`}
+                
+
+                    ${criteria.VARTYPE === "SELECTION" ? `
+                        <select class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                            <option value="">-- Select option --</option>
+                            ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
+                                <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
+                            `).join('') : ''}
+                        </select>
+                    ` : criteria.VARTYPE === "MULTI_SELECTION" ? `
+                        <select multiple class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                            <option value="">-- Select option --</option>
+                            ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
+                                <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
+                            `).join('') : ''}
+                        </select>
+                    ` : criteria.VARTYPE === "BOOLEAN" ? `
+                        <select class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                            <option value="">-- Select --</option>
+                            <option value="1">True</option>
+                            <option value="0">False</option>
+                        </select>
+                    ` : criteria.VARTYPE === "DATE" ? `
+                        <input type="date" class="criteria-values-date form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                    ` : criteria.VARTYPE === "NUMERIC" ? `
+                        <input type="number" step="any" class="criteria-values-number form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                    ` : `
+                        <input type="text" class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                    `}
             </div>
         </div>
     `).join('');
@@ -127,7 +150,7 @@ export async function renderEditDunningVersionForm() {
                 createOnBlur: true,
             });
         });
-    }, 500)
+    }, 1500)
 
     return html;
 };

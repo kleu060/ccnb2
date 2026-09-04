@@ -1,0 +1,16 @@
+.nav-tabs {
+    font-size: 14px;
+
+    .nav-link {
+        padding-left: 24px;
+        padding-right: 24px;
+        border: 0px;
+
+        &.active {
+            color: $bright-blue;
+            background-color: transparent;
+            border-bottom: 4px solid $bright-blue;
+            font-weight: bold
+        }
+    }
+}

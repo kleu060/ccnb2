@@ -5,7 +5,8 @@ require_once "../lib/auth.php";
 
 // Define the file name and path
 $file = $_GET["file"];
-$filePath = 'files/'.$file;
+$filePath = sys_get_temp_dir().'/'.$file;
+
 $downloadName = $file; // Name the user will see
 
 // Check if the file actually exists

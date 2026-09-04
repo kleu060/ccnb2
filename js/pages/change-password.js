@@ -12,7 +12,7 @@ export async function ChangePassword() {
     }
 
 const html = `
-        <section class="container-fluid login-section" id="login-section">
+        <section class="container-fluid change-passoword-section" id="login-section">
             <h1>Change Password</h1>
             <div class="row">
                 <div class="col-4">

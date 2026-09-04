@@ -9,7 +9,7 @@ export async function LoginPage() {
 
     const html = `
         <section class="container-fluid login-section" id="login-section">
-            <div class="card col-10">
+            <div class="card col-10 m-auto">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-4">

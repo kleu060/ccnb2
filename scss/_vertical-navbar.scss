@@ -5,23 +5,50 @@
     // position:absolute;
     // top: 0px;
     // left: 0px;
-    background-color: $black;
+    background-color: $blue;
     padding-top: 10px;
 
     ul {
         list-style: none;
-        padding: 0px;
         text-align:center;
         margin-top: 10px;
+        padding: 0px 5px;
 
         li {
             margin-top:10px;
-            margin-bottom:10px;
+            margin-bottom:15px;
+            background-color: $blue;
+            border-radius: 10px;
+            padding: 5px 10px;
 
             &.active {
-                border-left: 3px solid $yellow;
+                background-color: $bright-blue;
+            }
+
+            &.pending {
+                a {
+                    color: $light-grey;
+                    .icon {
+                        background-color: $light-grey;
+                    }
+                }
+            }
+
+            a {
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+                text-align: left;
+
+                .icon {
+                    width: 15px;
+                    height: 15px;
+                    margin-right: 4px;
+                }
+                
             }
         }
-    }
-    
+    }    
 }

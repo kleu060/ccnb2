@@ -210,6 +210,10 @@ switch ($endpoint) {
 
     case "id_blacklist_excel_download";
     
+        // $tempFile = sys_get_temp_dir() . '/test.txt';
+        // $result = file_put_contents($tempFile, "Temporary Data");
+        // print_r($result); exit();
+
         // Read the raw input stream
         $rawInput = file_get_contents('php://input');
 
@@ -245,9 +249,11 @@ switch ($endpoint) {
             if ( $excelFileDownloadResponse["success"] == 1 ) {
                 $excelFileDownloadReponseArray = json_decode($excelFileDownloadResponse["response"], true);
 
-                $dir = "files";
+                // $dir = "files";
+                // $dir = "/tmp/";
+                
                 $filename = "id_black_list_".$id."_".$requester."_".date("YmdHis").".xlsx";
-                $excelFileName = $dir."/". $filename;
+                $excelFileName = sys_get_temp_dir()."/". $filename;
                 $result = file_put_contents($excelFileName, base64_decode($excelFileDownloadReponseArray["filecontent"]));
                 if ($result !== false ) {
                     $return = [

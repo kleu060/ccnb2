@@ -60,8 +60,15 @@ export async function getAccount(searchType, searchString) {
     const url = `${API_BASE}/index.php?endpoint=acodeinq_2003`;
     const responseJson = await fetchAPI(url, body);
     
+    // console.log(responseJson);
+
     if ( responseJson.success == true ) {
-        return JSON.parse(responseJson.response);
+        // JSON.parse(responseJson.response);
+
+        let rawInnerJson = responseJson.response;
+        const safeInnerJson = rawInnerJson.replace(/("[\w_]+"\s*:\s*)([0-9]{15,})/g, '$1"$2"');
+
+        return JSON.parse(safeInnerJson);
     }
     else {
         console.error("Failed to fetch account data");
@@ -77,9 +84,14 @@ export async function getAccountSubInfo(searchType, accId) {
 
     const url = `${API_BASE}/index.php?endpoint=acodeinq_2003_subinfo`;
     const responseJson = await fetchAPI(url, body);
+    
 
     if ( responseJson.success == true ) {
-        return JSON.parse(responseJson.response);
+        // Regex looks for 16+ digit numbers and wraps them in quotes
+        const safeJsonStr = responseJson.response.replace(/:\s*(-?\d{16,})/g, ': "$1"');
+        const data = JSON.parse(safeJsonStr);
+        return data;
+        // return JSON.parse(responseJson.response);
     }
     else {
         console.error("Failed to fetch account data");
@@ -88,18 +100,20 @@ export async function getAccountSubInfo(searchType, accId) {
 
 export async function getAccountActionHistory(accountNo) {
     // simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // await new Promise(resolve => setTimeout(resolve, 300));
 
-    return [
-        {
-            date: "2026-02-02T16:00:00",
-            event: "call, ptp"
-        },
-        {
-            date: "2026-03-02T16:00:00",
-            event: "call, sched callback"
-        }
-    ];
+    const body = {
+        accountNo,
+    };
+
+    const url = `${API_BASE}/dunningGroup.php?endpoint=get_disposition_history`;
+    const responseJson = await fetchAPI(url, body);
+    if ( responseJson.success == true ) {
+        return JSON.parse(responseJson.response);
+    }
+    else {
+        console.error("Failed to fetch account data");
+    }
 }
 
 

@@ -5,33 +5,44 @@ export async function rendorAccountDetailSection(tab) {
             <div class="card-body">
                 <div class="mb-4">
                     <div class="row">
-                        <div class="col-12 mb-2">
-                            <h4 class=""><span x-text="account.name"></span>(<span x-text="account.id"></span>)</h4>
+                            
+                        <div class="col-12 mb-2" >
+                            <div class="d-flex align-items-center">
+                                <div class="round-icon-container bg-bright-blue me-2">
+                                    <span class="icon icon-address-card bg-white"></span>
+                                </div>                    
+                                <h4 class="mb-0"><span x-text="account.name"></span>(<span x-text="account.identity_id"></span>)</h4>
+                            </div>
                         </div>
+                        
                     </div>
                     
                     <div class="row">
                         <div class="col-4">
-                            <div class="field-group justify-content-start">
-                                <label class="me-3">Account Code</label>
-                                <span  x-text="account.acc_code"></span>
+                            <div class="">
+                                <label class="d-block">Account Code</label>
+                                <span class="fs-l fw-bold" x-text="account.acc_code"></span>
                             </div>
                         </div>
                         <div class="col-4">
-                            <div class="field-group justify-content-start ">
-                                <label class="me-3">Customer ID</label>
-                                <span  x-text="account.cust_id"></span>
+                            <div class="">
+                                <label class="d-block">Customer ID</label>
+                                <span class="fs-l fw-bold"  x-text="account.cust_id"></span>
+                            </div>
+                            <div class="">
+                                <label class="d-block">Billable</label>
+                                <span class="fs-l fw-bold"  x-text="account.billable"></span>
                             </div>
                         </div>
                         
                         <div class="col-4">
-                            <div class="field-group justify-content-start">
-                                <label class="me-3">Account ID</label>
-                                <span id="${tab}-account-code-acc-id" x-text="account.acc_id"></span>
+                            <div class="">
+                                <label class="d-block">Account ID</label>
+                                <span class="fs-l fw-bold" id="${tab}-account-code-acc-id" x-text="account.acc_id"></span>
                             </div>
-                            <div class="field-group justify-content-start">
-                                <label class="me-3">Parent Account ID</label>
-                                <span  x-text="account.parent_acc_id"></span>
+                            <div class="">
+                                <label class="d-block">Parent Account ID</label>
+                                <span class="fs-l fw-bold" x-text="account.parent_acc_id"></span>
                             </div>
                         </div>
                     </div>
@@ -120,7 +131,7 @@ export async function rendorAccountDetailSection(tab) {
                         </div>
                     </div>
                 </div>
-
+                <hr />
                 <div class="mb-4">
                     <div class="row row-cols-2 row-cols-lg-4">
                         <div class="col">
@@ -174,13 +185,13 @@ export async function rendorAccountDetailSection(tab) {
 
                         <div class="col">
                             <div class="field-group">
-                                <label class="">Credit balnce</label>
+                                <label class="">Credit balance</label>
                                 <span  x-text="account.credit_bal"></span>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <hr />
                 <div class="mb-4">
                     <div class="row row-cols-2 row-cols-lg-4">    
                         <div class="col">

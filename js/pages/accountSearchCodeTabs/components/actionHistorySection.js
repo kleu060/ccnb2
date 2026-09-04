@@ -8,8 +8,12 @@ export async function rendorActionHistorySection() {
                 <template x-for="(action, index) in actions" :key="index">
                     <div class="row">
                         <div class="col-12 mb-3">
-                            <div x-text="action.date"></div>
-                            <div x-text="action.event"></div>
+                            <strong><div x-text="action.datetime"></div></strong>
+                            <div>
+                                <strong>Agent:</strong>
+                                <span x-text="action.agent_name"></span>
+                            </div>
+                            <div x-text="action.content"></div>
                         </div>
                     </div>
                 </template>

@@ -2,11 +2,14 @@ form {
     button {
         margin-bottom: 8px;
     }
+
+    
 }
 
 .field-group {
     display: flex;
     justify-content: start;
+    font-weight: bold;
     
     label {
         width: 50%;       

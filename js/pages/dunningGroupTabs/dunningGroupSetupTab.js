@@ -15,7 +15,7 @@ import { fetchAPI } from '../../../js/api/fetch-api.js';
 
 import TomSelect from 'tom-select';
 
-export async function renderDunningGroupSetupTab() {
+export async function renderDunningGroupSetupTab(activeTab) {
 
     const dunningGroupTable = await renderDunningGroupTable(true);
     const dunningVersionTable = await renderDunningVersionTable();
@@ -32,7 +32,7 @@ export async function renderDunningGroupSetupTab() {
     const dunningNPSI = DunningJson.NPSI;
 
     const html =  `
-        <div class="tab-pane fade" id="dunning-group-setup-tab" role="tabpanel" aria-labelledby="dunning-group-setup-tab">
+        <div class="tab-pane fade ${activeTab === 'setup' ? 'show active' : ''}" id="dunning-group-setup-tab" role="tabpanel" aria-labelledby="dunning-group-setup-tab">
             <div class="container-fluid">
                 <div class="d-flex gap-2 mb-3">
                     <h1>Dunning Group Setup</h1>
@@ -263,47 +263,74 @@ export async function renderDunningGroupSetupTab() {
                         let optionElement;
                         let valueElement;
                         let valueString;
-
                         
-                        dunningLogics.forEach( criteria => {
-                            checkboxElement = document.getElementById(`crit-${criteria.criteria}`);
-                            checkboxElement.checked = true;
+                        const url = `${API_BASE}/getMapping.php`;
+                        const DunningJson = await fetchAPI(url, body);
+                        const dunningCriteria = DunningJson.CRITERIA;
 
-                            optionElement = document.getElementById(`crit-${criteria.criteria}-option`);
-                            console.log("criteria operator: " + criteria.operator)
-                            optionElement.value = criteria.operator;
+                        dunningLogics.forEach(  function (criteria) {
+                                console.log(criteria);
+                                // 1. Find the VARTYPE configuration from your dunningCriteria object
+                                const criteriaConfig = Object.values(dunningCriteria).find(item => item.ID == criteria.criteria);
+                                const vartype = criteriaConfig ? criteriaConfig.VARTYPE : null;
+                                console.log(`Criteria ID: ${criteria.criteria}, VARTYPE: ${vartype}`);
 
-                            valueElement = document.getElementById(`crit-${criteria.criteria}-value`);
-                            const tomselect = valueElement.tomselect;
-                            tomselect.clear(true);          // Clear without firing change event
+                                
 
-                            if (criteria.criteria == 9) {
-                                // 1. Convert the nested dunningNPSI object into a flat array of {ID, DISPLAY}
-                                const npsiList = Object.values(dunningNPSI);
+                                checkboxElement = document.getElementById(`crit-${criteria.criteria}`);
+                                checkboxElement.checked = true;
 
-                                // 2. Map your numeric values to the format TomSelect expects: { value, text }
-                                const formattedOptions = criteria.values.map(savedId => {
-                                    // Find the matching item in dunningNPSI by comparing IDs
-                                    const match = npsiList.find(item => item.ID == savedId);
-                                    
-                                    return {
-                                        value: savedId,
-                                        text: match ? match.DISPLAY : savedId // Fallback to ID if display text isn't found
-                                    };
-                                });
+                                optionElement = document.getElementById(`crit-${criteria.criteria}-option`);
+                                console.log("criteria operator: " + criteria.operator);
+                                optionElement.value = criteria.operator;
 
-                                // 3. Populate and select them in TomSelect
-                                tomselect.addOptions(formattedOptions);
-                                tomselect.setValue(criteria.values, true);
-                            }
-                            else {
-                                tomselect.addOptions(
-                                    criteria.values.map(v => ({ value: v, text: v }))
-                                );
-                                tomselect.setValue(criteria.values, true);
-                            }
-                                                    
-                        });
+                                valueElement = document.getElementById(`crit-${criteria.criteria}-value`);
+                                // 2. Handle assignments dynamically based on VARTYPE
+                                if (vartype === "SELECTION" || vartype === "MULTI_SELECTION" ) {
+                                    const tomselect = valueElement.tomselect;
+                                    if (tomselect) {
+                                        tomselect.clear(true); // Clear without firing change event
+
+                                        const selectionOptions = criteriaConfig.SELECTION || [];
+                                        const formattedOptions = criteria.values.map(savedId => {
+                                            const match = selectionOptions.find(item => item.ID == savedId);
+                                            return {
+                                                value: savedId,
+                                                text: match ? (match.DISPLAY || match.ID) : savedId
+                                            };
+                                        });
+                                        tomselect.addOptions(formattedOptions);
+                                        tomselect.setValue(criteria.values, true);
+                                    }
+                                }
+                                else if (vartype === "BOOLEAN") {
+                                    const tomselect = valueElement.tomselect;
+                                    if (tomselect) {
+                                        tomselect.clear(true); // Clear without firing change event
+
+                                        // Convert criteria.values array into the { value, text } objects TomSelect needs
+                                        const formattedOptions = criteria.values.map(savedId => {
+                                            // Normalise value to string/number for accurate checks
+                                            const normalizedId = String(savedId); 
+                                            
+                                            return {
+                                                value: savedId,
+                                                text: normalizedId === "1" ? "True" : "False"
+                                            };
+                                        });
+
+                                        tomselect.addOptions(formattedOptions);
+                                        tomselect.setValue(criteria.values, true);
+                                    }
+                                }
+                                else {
+                                    // Standard DOM elements (Inputs, Date Pickers, Boolean Drops) do not use TomSelect
+                                    // Pull the raw scalar value safely out of your criteria.values array
+                                    const defaultValue = Array.isArray(criteria.values) ? criteria.values[0] : criteria.values;
+                                    valueElement.value = defaultValue !== undefined ? defaultValue : '';
+                                }
+
+                            });
                     }
 
                     const createDunningVersionBtn = e.target.closest('.btn-dunning-group-create-version');
@@ -360,7 +387,7 @@ export async function renderDunningGroupSetupTab() {
                         document.getElementById('dunning-version-form-action-title').innerHTML = "Edit";
                         document.getElementById('dunning-group-version-dunning-id-edit').value = dunningGroupId;
                         document.getElementById('dunning-version-form-edit-dunning-name').innerHTML = dunningGroupName;
-                        document.getElementById('dunning-group-version-dunning-priority-edit').innerHTML = dunningGroupPriority;
+                        document.getElementById('dunning-group-version-dunning-priority-edit').value = dunningGroupPriority;
                         document.getElementById('dunning-group-id-edit-action').value = "edit";
                         document.getElementById('dunning-group-version-id-edit').value = versionId;
                         document.getElementById('dunning-group-version-edit').value = versionNumber;
@@ -429,12 +456,12 @@ export async function renderDunningGroupSetupTab() {
             //     dunningGroupEditFormSection.classList.add("d-none");
             // });
 
-            const btnCreateDunningGroupFormBack = document.getElementById("btn-create-dunning-group-form-back");
-            btnCreateDunningGroupFormBack.addEventListener("click", (e) => {
-                e.preventDefault();
-                // dunningGroupCreateFormSection.classList.add("d-none");
-                dunningGroupSetupSection.classList.remove("d-none");                
-            });
+            // const btnCreateDunningGroupFormBack = document.getElementById("btn-create-dunning-group-form-back");
+            // btnCreateDunningGroupFormBack.addEventListener("click", (e) => {
+            //     e.preventDefault();
+            //     // dunningGroupCreateFormSection.classList.add("d-none");
+            //     dunningGroupSetupSection.classList.remove("d-none");                
+            // });
 
 
 
@@ -500,15 +527,22 @@ export async function renderDunningGroupSetupTab() {
                     keyword = "created";
                 }
                 const response = await fetchAPI(url, body);
-                const responseJson = JSON.parse(response.response)
+                const responseJson = JSON.parse(response.response);
 
                 const editDunningGroupMessage = document.getElementById('edit-dunning-group-message');
                 if (!response.success) {
                     editDunningGroupMessage.innerHTML = "Dunning Group "+keyword+" fail - " + responseJson.error_description;
 
                     if (keyword == "created") {
-                        document.getElementById('btn-submit-dunning-version-form').disabled = true;
+                        
+                        if (responseJson.error_code != 0 ) {
+                            document.getElementById('btn-submit-dunning-version-form').disabled = false;
+                        }
+                        else {
+                            document.getElementById('btn-submit-dunning-version-form').disabled = true;
+                        }
                     }
+                    
                 }
                 else {
                     if (responseJson.error_code != 0 ) {
@@ -517,13 +551,14 @@ export async function renderDunningGroupSetupTab() {
                     else {
                         editDunningGroupMessage.innerHTML = "Dunning Group "+keyword+" successfully";
                     }
+                    document.getElementById('btn-submit-dunning-version-form').disabled = false;
                 }
 
 
             });
             
 
-        }, 100);
+        }, 1000);
         
         return html
 }

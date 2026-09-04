@@ -23,7 +23,6 @@
             window.group_name = variables.group_name;
             window.latest_id_blacklist_file = variables.latest_id_blacklist_file;
             
-            console.log("Global allowed_pages initialized:", window.allowed_pages);
         } catch (error) {
             console.error("Failed to load session variables:", error);
             window.allowed_pages = Object.freeze([]);

@@ -3,7 +3,7 @@ export function renderFooter() {
 
     return `
         <footer>
-            <p>© <span class="footer-year">${year}</span> DTIL</p>
+            <div>© <span class="footer-year">${year}</span> DTIL</div>
         </footer>
     `;
 }

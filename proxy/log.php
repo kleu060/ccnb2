@@ -17,19 +17,21 @@ $logLine = sprintf(
     substr($message, 0, 3000)
 );
 
-$logDir = '/var/log/ccnb2/';
-$logFile = $logDir . '/app_'.$date.'.log';
+error_log($logLine);
 
-if (!is_dir($logDir)) {
-    mkdir($logDir, 0777, true);
-}
+// $logDir = '/var/log/ccnb2/';
+// $logFile = $logDir . '/app_'.$date.'.log';
 
-file_put_contents(
-    $logFile,
-    $logLine,
-    FILE_APPEND
-);
+// if (!is_dir($logDir)) {
+//     mkdir($logDir, 0777, true);
+// }
 
-echo json_encode([
-    'success' => true
-]);
+// file_put_contents(
+//     $logFile,
+//     $logLine,
+//     FILE_APPEND
+// );
+
+// echo json_encode([
+//     'success' => true
+// ]);

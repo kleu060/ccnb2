@@ -34,7 +34,7 @@ switch ($endpoint) {
         ];
 
 
-        echo $client->get("/usergroup/useradd.php", $token, $data, true);
+        echo $client->get("/usergroup/useradd.php", $token, $data, false);
         break;
     
     case "view_user";
@@ -56,6 +56,7 @@ switch ($endpoint) {
         $phone = $input['phone'] ?? '';
         $email = $input['email'] ?? '';
         $remark = $input['remark'] ?? '';
+        $password = $input['password'] ?? '';
 
         $data = [
             "user_id" => $userId,
@@ -67,7 +68,12 @@ switch ($endpoint) {
             "remark" => $remark,
         ];
 
-        echo $client->get("/usergroup/useredit.php", $token, $data, true);
+        //Only add password if it is not an empty string
+        if ($password !== '') {
+            $data["password"] = $password;
+        }
+
+        echo $client->get("/usergroup/useredit.php", $token, $data, false);
         break;
     default:
 
