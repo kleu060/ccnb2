@@ -1,10 +1,9 @@
+// Page 1002, Admin > Access
+
 import { API_BASE } from '../../config.js';
 import { PAGES } from '../../variables.js';
 import { getGroups, getGroupAccess } from "./functions/functions.js";
 import { fetchAPI } from '../../api/fetch-api.js';
-
-
-
 
 export async function renderAccessSettingTab() {
     // console.log(JSON.parse(groups.response));
@@ -26,66 +25,117 @@ export async function renderAccessSettingTab() {
     // const groups = [];
     // const groupAccess = [];
     const html =  `
-        <div class="tab-pane fade" id="access-setting-tab" role="tabpanel" aria-labelledby="access-setting-tab" style="overflow:auto;">
-            <div class="alert alert-primary d-none" id="update-access-list-response-message">
+
+        <style>
+            .table-responsive-container {
+                max-width: 100%;
+                overflow-x: auto;
+                position: relative;
+            }
+            #access-list-table {
+                border-collapse: separate;
+                border-spacing: 0;
+                width: 100%;
+            }
+            /* Freeze First Column (Labels) */
+            #access-list-table th:first-child,
+            #access-list-table td:first-child {
+                position: sticky;
+                left: 0;
+                background-color: #fff;
+                z-index: 2;
+                border-right: 2px solid #dee2e6;
+            }
+            /* Freeze Last Column (Buttons) */
+            #access-list-table th:last-child,
+            #access-list-table td:last-child {
+                position: sticky;
+                right: 0;
+                background-color: #fff;
+                z-index: 2;
+                border-left: 2px solid #dee2e6;
+            }
+            /* Keep header above body elements when scrolling vertically/horizontally */
+            #access-list-table thead th {
+                position: sticky;
+                top: 0;
+                background-color: #f8f9fa;
+                z-index: 1;
+            }
+            /* Ensure the frozen header cells have a higher priority index stack */
+            #access-list-table thead th:first-child,
+            #access-list-table thead th:last-child {
+                z-index: 3;
+            }
+        </style>
+
+        <div class="tab-pane fade" id="access-setting-tab" role="tabpanel" aria-labelledby="access-setting-tab">
+            
+            <div class="row">
+                <div class="col-12";
+                    <div class="alert alert-primary d-none" id="update-access-list-response-message">
+                    </div>
+                    <div class="table-responsive-container m-0 p-0">
+                        <table class="table" id="access-list-table">
+                            <thead>
+                                <tr>    
+                                    <th class='bg-white'>Page</th>
+                                    ${Object.entries(PAGES).map(([id, name]) => `
+                                        <th>${name}</th>
+                                    `).join('')}
+                                    <th class='bg-white'>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Object.entries breaks down the 'Group' object into [key, data] pairs -->
+                                ${Object.entries(userGroups).map(([groupKey, groupData]) => {
+                                    const groupId = groupData.ID;
+                                    const groupName = groupData.NAME;
+
+                                    // Find matching permission list using the numerical ID
+                                    const matchingAccess = groupAccess.find(access => access.group_id === groupId);
+                                    
+                                    // Force string conversion for robust inclusion check against PAGES object keys
+                                    const assignedPages = matchingAccess ? matchingAccess.page_code.map(String) : [];
+
+                                    return `
+                                    <tr>
+                                        <th scope="row" class="bg-white">${groupName}</th>
+                                        
+                                        <!-- Loop through PAGES keys to build matching checkbox columns -->
+                                        ${Object.entries(PAGES).map(([pageCode, pageName]) => {
+                                            const isChecked = assignedPages.includes(String(pageCode)) ? 'checked' : '';
+                                            
+                                            return `
+                                            <td>
+                                                <input 
+                                                    type="checkbox" 
+                                                    id="access-${groupId}-${pageCode}" 
+                                                    data-group-id="${groupId}" 
+                                                    data-page-code="${pageCode}" 
+                                                    ${isChecked} 
+                                                    class="chk-access-group-${groupId}" 
+                                                />
+                                            </td>
+                                            `;
+                                        }).join('')}
+                                        
+                                        <td class="bg-white">
+                                            <button 
+                                                type="button" 
+                                                class="btn-update-access-list btn btn-primary" 
+                                                data-group-id="${groupId}">
+                                                Update
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <table class="table" id="access-list-table">
-                <thead>
-                    <tr>    
-                        <th>&nbsp;</th>
-                        ${Object.entries(PAGES).map(([id, name]) => `
-                            <th>${name}</th>
-                        `).join('')}
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Object.entries breaks down the 'Group' object into [key, data] pairs -->
-                    ${Object.entries(userGroups).map(([groupKey, groupData]) => {
-                        const groupId = groupData.ID;
-                        const groupName = groupData.NAME;
-
-                        // Find matching permission list using the numerical ID
-                        const matchingAccess = groupAccess.find(access => access.group_id === groupId);
-                        
-                        // Force string conversion for robust inclusion check against PAGES object keys
-                        const assignedPages = matchingAccess ? matchingAccess.page_code.map(String) : [];
-
-                        return `
-                        <tr>
-                            <th scope="row">${groupName}</th>
-                            
-                            <!-- Loop through PAGES keys to build matching checkbox columns -->
-                            ${Object.entries(PAGES).map(([pageCode, pageName]) => {
-                                const isChecked = assignedPages.includes(String(pageCode)) ? 'checked' : '';
-                                
-                                return `
-                                <td>
-                                    <input 
-                                        type="checkbox" 
-                                        id="access-${groupId}-${pageCode}" 
-                                        data-group-id="${groupId}" 
-                                        data-page-code="${pageCode}" 
-                                        ${isChecked} 
-                                        class="chk-access-group-${groupId}" 
-                                    />
-                                </td>
-                                `;
-                            }).join('')}
-                            
-                            <td>
-                                <button 
-                                    type="button" 
-                                    class="btn-update-access-list btn btn-primary" 
-                                    data-group-id="${groupId}">
-                                    Update
-                                </button>
-                            </td>
-                        </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
         </div>`;
 
         setTimeout(function() {
@@ -135,7 +185,7 @@ export async function renderAccessSettingTab() {
                 
 
             });
-        }, 0);
+        }, 1000);
 
 
     return html;

@@ -34,56 +34,92 @@ switch ($endpoint) {
 
     case "acodeinq_2003":
         $input = json_decode(file_get_contents('php://input'), true);
+        $part = $input["part"];
         $data = [];
-        if ( $input["searchType"] == "acc_code"){
+        if ( $part == 1 ) {
+            if ( $input["searchType"] == "acc_code"){
+                $data = [
+                    "part" => $part,
+                    "search_type" => $input["searchType"],
+                    "acc_code" => $input["searchString"],
+                ];
+            }
+            else{       //search_type == "acc_id"
+                $data = [
+                    "part" => $part,
+                    "search_type" => $input["searchType"],
+                    "acc_id" => $input["searchString"],
+                ];
+            }
+        }
+        else if ($part == 2 ) {
             $data = [
-                "search_type" => $input["searchType"],
-                "acc_code" => $input["searchString"],
+                "part" => $part,
+                "acc_id" => $input["acc_id"],
             ];
         }
-        else{       //search_type == "acc_id"
+        else {  // part 3
             $data = [
-                "search_type" => $input["searchType"],
-                "acc_id" => $input["searchString"],
+                "part" => $part,
+                "acc_code" => $input["acc_code"],
             ];
         }
-        // print_r($data); exit();
         echo $client->get("/acodeinq_2003/search.php", $token, $data);
-        // echo "here";
         break;
-    case "agent-update-contact":
+    
+    case "add-disposition":
+        $input = json_decode(file_get_contents('php://input'), true);
+
+        $date = new DateTime($input["input-sched-call-back"]);
+        $InputSchedCallBackFormattedDate = $date->format('Y-m-d H:i:s');
+
+
+        $data = [
+            "type" => "disposition",
+            "acc_id" => $input["acc_id"],
+            "disposition_code" => $input["sel-update-disposition"],
+            "callback_datetime" => $InputSchedCallBackFormattedDate,
+        ];
+
+        echo $client->post("/acodeinq_2003/update.php", $token, $data);
+        break;
+    case "agent-add-contact": // page 202
 
         $input = json_decode(file_get_contents('php://input'), true);
 
-
-        $accId = $input['accId'] ?? '';
-        $contactType = $input['contactType'] ?? '';
-        $contactTypeValue = $input['contactTypeValue'] ?? '';
-
-        if ( $contactType == constant("ConstMapping::ContactType")["EMAIL"]["ID"] ){ // Email
-            if ( !filter_var($contactTypeValue, FILTER_VALIDATE_EMAIL)) {
-
-                $return = [
-                    "success" => false,
-                    "response" => "Invalid Email Address"
-                ];
-                echo json_encode($return);
-                return;
-            }
-        }
-
-        $return = [
-            "success" => true,
-            "response" => ""
+        $data = [
+            "type" => "type=addcontact",
+            "acc_id" => $input["acc_id"],
+            "contact_value" => $input["contact_value"],
         ];
+
+        echo $client->post("/acodeinq_2003/update.php", $token, $data);
+        break;
         
         break;
     case "acodeinq_2003_subinfo":
+
+        /* Ricky: for blhistory, need to supply acc_code, for contact, need cust_id */
         $input = json_decode(file_get_contents('php://input'), true);
-        $data = [
-            "search_type" => $input["searchType"],
-            "acc_id" => $input["accId"],
-        ];
+
+        if ( $input["searchType"] == "contact") {
+            $data = [
+                "search_type" => $input["searchType"],
+                "cust_id" => $input["accId"],
+            ];    
+        }
+        else if ( $input["searchType"] == "blhistory") {
+            $data = [
+                "search_type" => $input["searchType"],
+                "acc_code" => $input["accId"],
+            ];
+        }
+        else {
+            $data = [
+                "search_type" => $input["searchType"],
+                "acc_id" => $input["accId"],
+            ];
+        }
         
         echo $client->get("/acodeinq_2003/getsubinfo.php", $token, $data);
         break;
@@ -118,7 +154,8 @@ switch ($endpoint) {
             "password" => $input["new_password"],
             "force_pw_change" => 0
         ];
-        $result = $client->get("/auth/setpw.php", $token, $data);
+        
+        $result = $client->post("/auth/setpw.php", $token, $data);
         $resultArray = json_decode($result, true);
         
         // print_r($resultArray);
@@ -238,12 +275,25 @@ switch ($endpoint) {
             ];
             $errCode = 5;
             $excelFileDownloadResponse = null;
-            while ($errCode == 5) {
+            $MAX_TIMEOUT = 10;
+            $count = 0;
+            while ($errCode == 5 && $count < $MAX_TIMEOUT) {
                 $excelFileDownloadResponse = json_decode($client->get("/blfunc/id_blacklist_excel_download.php", $token, $data), true);
                 $excelFileDownloadResponseArray = json_decode($excelFileDownloadResponse["response"], true);
                 $errCode = $excelFileDownloadResponseArray["error_code"];
                 sleep(5);
 
+                $count ++;
+
+            }
+
+            if ( $count >= $MAX_TIMEOUT ){
+                $return = [
+                    "success" => false,
+                    "response" => [
+                        "error_description" => "Download file timeout"
+                    ]   
+                ];
             }
             
             if ( $excelFileDownloadResponse["success"] == 1 ) {
@@ -276,7 +326,7 @@ switch ($endpoint) {
         echo json_encode($return);            
         break;
         
-    case "id_blacklist_excel_upload";
+    case "id_blacklist_excel_upload";       //page 403, page 404, internalBlackListTab.js and internalBlacklistAdminTab.js
         // read file binary and base64 encode it
         $requester = $_POST["requester"];
 
@@ -303,7 +353,8 @@ switch ($endpoint) {
         
         $data = [
             "filecontent" => $base64,
-            "requester" => $requester
+            "requester" => $requester,
+            "filename" => $originalName
         ];
         echo $client->post("/blfunc/id_blacklist_excel_upload.php", $token, $data);
         break;

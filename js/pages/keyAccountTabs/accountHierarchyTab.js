@@ -42,6 +42,21 @@ export async function renderAccountHierarchyTab() {
         `;
         setTimeout(async function(){
             await renderAccountHierarchyTable();
+
+            const accountHierarchyForm = document.getElementById('account-hierarchy-form');
+            accountHierarchyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                // const acc_id = document.getElementById('acc_id');
+                // const body = {
+                //     acc_id
+                // };
+
+                // const url = `${API_BASE}/enterprise.php?endpoint=list_account_hierarchy`;
+                // const result = await fetchAPI(url, body);
+                // const response = JSON.parse(result.response);
+                // await renderAccountHierarchyTable(response.response);
+            });
+
         }, 500);
 
     return html;

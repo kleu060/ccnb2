@@ -32,11 +32,21 @@ export async function renderEditAgentModal() {
                         <div class="modal-body">
 
                             <div class="mb-1 field-group">
-                                <label>Name</label>
-                                <select id="user-for-agent-edit" name="user_id">
-                                    <option value=""></option>
-                                </select>                            
+                                <label>id</label>
+                                <span id="caller-id-edit"></span>
                             </div>
+
+                            <div class="mb-1 field-group">
+                                <label>Name</label>
+                                <span id="caller-name-edit"></span>
+                            </div>
+
+
+                            <div class="mb-1 field-group">
+                                <label>Full name</label>
+                                <span id="caller-full-name-edit"></span>
+                            </div>
+
                             <div class="mb-1 field-group">
                                 <label>Caller ID</label>
                                 <input type="text"  name="caller_id" id="caller-id-edit" value=""/>

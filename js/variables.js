@@ -33,12 +33,16 @@ export const PAGES = {
     "5001": "Dunning Group", 
     "5002": "Campaign Group Setup", 
     "5003": "Create Dunning Group",
-    "5004": "Dunning Agent",
+    "5004": "Campaign Setup",
+    "5005": "Dunning Agent",
     "6001": "DCA",
     "6003": "NOD",
     "6008": "DC Agency",
     "7001": "Credit Score",
-    "8001": "Commission",
+    "8001": "Commission Agent",
+    "8002": "Commission Manage",
+    "8003": "Commission Setup",
+    "8004": "Extra Commission",
     "9001": "DCA Commission",
     "10002": "Admin"
 }

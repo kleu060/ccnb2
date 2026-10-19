@@ -24,12 +24,7 @@ export async function DcaAgencyMain() {
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="btn-campaign-list-tab" data-bs-toggle="tab" data-bs-target="#campaign-list-tab" type="button" role="tab" aria-controls="campaign-list-tab" aria-selected="false">Camapign List</button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="btn-download-tab" data-bs-toggle="tab" data-bs-target="#download-tab" type="button" role="tab" aria-controls="download-tab" aria-selected="false">Download</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="btn-upload-disposition-tab" data-bs-toggle="tab" data-bs-target="#upload-disposition-tab" type="button" role="tab" aria-controls="upload-disposition-tab" aria-selected="false">Download Disposition</button>
-                        </li>
+
                     </ul>
                 </div>
             </div>

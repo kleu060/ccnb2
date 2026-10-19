@@ -9,10 +9,11 @@ body {
         // width: 96%;
         // margin-left: auto;
         // margin-right: auto;
-        width: 100%;
+        width: calc(100% - $verticalNavbarWidth);
         display: flex;
         flex-direction: column;
         min-height: 100vh; /* full viewport height */
+        height: 100vh;
 
         #header {
             background-color: white;
@@ -20,12 +21,18 @@ body {
                 // padding-left: $verticalNavbarWidth;
                 // padding-right: $verticalNavbarWidth;
                 width: $mainContentWidth;
+                height: $headerHeight;
                 margin-left: auto;
                 margin-right: auto;
+
             }
         }
         #main-app {
             flex: 1;
+            height: calc(100% - $headerHeight);
+            overflow: auto;
+
+
             > .container-fluid {
                 // padding-left: $verticalNavbarWidth;
                 // padding-right: $verticalNavbarWidth;

@@ -5,13 +5,15 @@ export const mockData = {
             region: 'Central',
             subscriber_status: 'active',
             extended_date: `
-                <select>
+                <select class="form-select-sm">
                     <option value="0">Not Defined</option>
                     <option value="1">BAP</option>
                     <option value="2">BKK</option>
                 </select>
             `,
-        }
+
+        },
+        
     ],
     accountHierarchygData: [
         {
@@ -21,6 +23,8 @@ export const mockData = {
             account_type: 'PARENT',
             ctc: '',
             credit_limit: '299.00',
+            outstanding_balance: '1013.45',
+            overdue_amount: '300.00'
             
         }
     ],
@@ -50,5 +54,21 @@ export const mockData = {
             email: 'kleu060@gmail.com',
             phone: '022123123',
         },
-    ]
+    ],
+    picSalesAccountData: [
+        {
+            action: '<button class="btn btn-primary btn-edit-pic-sales-manager">Edit</button>',
+            name: 'Ricky Leung',
+            full_name: 'Ricky Leung',
+            email: 'kleu060@gmail.com',
+            phone: '022123123',
+        },
+        {
+            action: '<button class="btn btn-primary btn-edit-pic-sales-manager">Edit</button>',
+            name: 'Ricky Leung',
+            full_name: 'Ricky Leung',
+            email: 'kleu060@gmail.com',
+            phone: '022123123',
+        },
+    ],
 };

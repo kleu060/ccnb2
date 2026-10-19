@@ -10,17 +10,17 @@ export async function renderVerticalNavBar() {
 
         // 2001 controls the "Account Search" (Inquiry) menu item
         html += allowedPages.includes("2001") ? `
-            <li id="menu-item-inquiry" class="menu-item pending">
+            <li id="menu-item-inquiry" class="menu-item">
                 <a href="inquiry">
-                    <span class="icon icon-inquiry"></span>Account Search
+                    <span class="icon icon-inquiry bg-white"></span>Account Search
                 </a>
             </li>
         ` : '';
 
         html += allowedPages.includes("2002") ? `
-            <li id="menu-item-customer-search" class="menu-item pending">
+            <li id="menu-item-customer-search" class="menu-item">
                 <a href="customer-search">
-                    <span class="icon icon-customer"></span>Customer Search
+                    <span class="icon icon-customer bg-white"></span>Customer Search
                 </a>
             </li>
         `: '';
@@ -60,7 +60,7 @@ export async function renderVerticalNavBar() {
         ` : '';
 
         html += allowedPages.includes("6001") ? `
-            <li id="menu-item-dca" class="menu-item pending" >
+            <li id="menu-item-dca" class="menu-item" >
                 <a href="dca">
                     <span class="icon icon-dca bg-white"></span>DCA
                 </a>
@@ -76,7 +76,7 @@ export async function renderVerticalNavBar() {
         ` : '';
 
         html += allowedPages.includes("6008") ? `
-            <li id="menu-item-nod" class="pending" class="menu-item">
+            <li id="menu-item-dca-agency" class="menu-item pending">
                 <a href="dca-agency">
                     <span class="icon icon-dca-agency bg-white"></span>DCA Agency
                 </a>
@@ -92,7 +92,7 @@ export async function renderVerticalNavBar() {
         ` : '';
 
         html += allowedPages.includes("8001") ? `
-            <li id="menu-item-comission" class="menu-item pending">
+            <li id="menu-item-comission" class="menu-item">
                 <a href="commission">
                     <span class="icon icon-commission bg-white"></span>Comission
                 </a>
@@ -100,7 +100,7 @@ export async function renderVerticalNavBar() {
         ` : '';
 
         html += allowedPages.includes("9001") ? `
-            <li id="menu-item-dca-commission" class="menu-item pending">
+            <li id="menu-item-dca-commission" class="menu-item">
                 <a href="dca-commission">
                     <span class="icon icon-dca-commission bg-white"></span>DCA Comission
                 </a>

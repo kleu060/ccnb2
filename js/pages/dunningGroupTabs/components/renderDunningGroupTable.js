@@ -11,7 +11,6 @@ export async function renderDunningGroupTable(isEdit = false) {
         criteriaContainer = "criterias-setupcontainer";
 
     }
-
     const html = `
         <div class="row">
             <div class="col-12">
@@ -24,8 +23,10 @@ export async function renderDunningGroupTable(isEdit = false) {
        
     `;
 
-    setTimeout(function(){
-        loadDunningGroupTable(isEdit);
+    setTimeout(async function(){
+        console.log("loadDunningGroupTable - " + tableName + " " + isEdit );
+        await loadDunningGroupTable(isEdit);
+
 
         const tableContainer = document.getElementById(tableName);
         // const setupTableContainer = document.getElementById('dunning-group-setup-table');
@@ -70,7 +71,7 @@ export async function renderDunningGroupTable(isEdit = false) {
         //     });
         // }
 
-    }, 500);
+    }, 2000);
 
     return html;
 }

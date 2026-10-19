@@ -145,7 +145,7 @@ export async function router() {
     }
 
     // Fallback to Home if route is not defined
-    const routeComponent = routeConfig ? routeConfig.component : Login;
+    const routeComponent = routeConfig ? routeConfig.component : WelcomePage;
     const content = await routeComponent();
 
     const app = document.getElementById("main-app");
@@ -162,13 +162,13 @@ export async function router() {
     // Event listener
     if ( path == "/account-enquiry" ){
 
-        const params = new URLSearchParams(window.location.search);
-        const accountNo = params.get('account_code') || '';
+        // const params = new URLSearchParams(window.location.search);
+        // const accountNo = params.get('account_code') || '';
         
-        document.getElementById("choices").addEventListener("change", (e) => {
-            loadDebtorTable(e.target.value, accountNo);
-        });
-        loadDebtorTable(document.getElementById("choices").value, accountNo);
+        // document.getElementById("choices").addEventListener("change", (e) => {
+        //     loadDebtorTable(e.target.value, accountNo);
+        // });
+        // loadDebtorTable(document.getElementById("choices").value, accountNo);
     }
     else if ( path == "/customer-search" ){
         loadCustomerTable();
@@ -238,7 +238,8 @@ export async function router() {
             el.classList.remove("active");
             
             // 3. Use .includes() for string matching
-            if (path.includes(addressElementPath)) {
+            // if (path.includes(addressElementPath)) {
+            if ( path == addressElementPath ) {
                 el.classList.add("active");
             }
         }

@@ -9,6 +9,26 @@
         body {
             --bs-body-line-height: 1.2;
             font-size: 1em !important;
+        
+            header {
+                .container-fluid {
+                    padding-top:20px;
+                    width: 96%;
+                }
+            }
+        }
+
+
+        /* Forces full width layouts during print execution */
+        @media print {
+            html, body, .main, .container-fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                
+            }
+            .col-6 {
+                width: 100% !important; /* Forces the half-width card to take up the full paper width when printed */
+            }
         }
     </style>
 </head>
@@ -17,11 +37,12 @@
         
         <div class="main">
 
-            <div>
-                <header class="d-flex align-items-center">
-                    <a class="logo me-3" href="/" data-link><img src="img/celcomdigi_logo.png" /></a>
-                </header>
-            </div>
+            <header class="d-flex align-items-center">
+                <div class="container-fluid">
+                    <a class="logo me-3" href="/ccnb2/" data-link><img src="img/celcomdigi_logo.png" /></a>
+                </div>
+            </header>
+
             <main id="main-app">
                 <div class="container-fluid">
                     <div class="row">

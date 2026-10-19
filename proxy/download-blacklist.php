@@ -4,8 +4,20 @@ include_once('config.php');
 require_once "../lib/auth.php";
 
 // Define the file name and path
-$file = $_GET["file"];
-$filePath = sys_get_temp_dir().'/'.$file;
+// 1. Sanitize the input immediately to prevent Path Traversal attacks
+$file = basename($_GET["file"]);
+
+// 2. Dynamically fetch the absolute path to your Document Root
+$docRoot = rtrim($_SERVER['DOCUMENT_ROOT'], '/');
+
+// Define the file name and path
+if ($file == "sample-id-blacklist.xlsx") {
+    // This dynamically resolves to: /var/www/html/ccnb2/proxy/files/sample-id-blacklist.xlsx
+    $filePath = $docRoot . '/ccnb2/proxy/files/' . $file;
+}
+else {
+    $filePath = sys_get_temp_dir().'/'.$file;
+}
 
 $downloadName = $file; // Name the user will see
 

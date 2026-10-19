@@ -1,3 +1,5 @@
+// Page 502, Dunning Group > Dunning Group Setup
+
 import * as bootstrap from 'bootstrap'; // Add this at the top
 
 // import { loadDunningGroupSetupTable } from "./functions/functions.js";
@@ -18,7 +20,9 @@ import TomSelect from 'tom-select';
 export async function renderDunningGroupSetupTab(activeTab) {
 
     const dunningGroupTable = await renderDunningGroupTable(true);
+    const editDunningGroupForm = await renderEditDunningGroupForm() 
     const dunningVersionTable = await renderDunningVersionTable();
+    const editDunningVersionForm = await renderEditDunningVersionForm();
     // const campaignTable = await renderCampaignTable(true);
 
     const type = "Dunning";
@@ -41,7 +45,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
                     ${dunningGroupTable}
                 </section>
                 <section id="dunning-group-edit-form-section" class="d-none">
-                    `+ await renderEditDunningGroupForm() + `
+                   ${editDunningGroupForm}
                 </section>
 
 
@@ -53,7 +57,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
                 </section>
 
                 <section id="dunning-version-edit-form-section" class="d-none">
-                    `+ await renderEditDunningVersionForm() + `
+                    ${editDunningVersionForm}
                 </section>
 
                 
@@ -62,7 +66,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
         </div>
     `;
 
-    setTimeout(function(){
+    setTimeout(async function(){
             // loadDunningGroupSetupTable();
 
             const dunningGroupSetupSection = document.getElementById('dunning-group-setup-section');
@@ -70,45 +74,12 @@ export async function renderDunningGroupSetupTab(activeTab) {
             // const dunningGroupCreateFormSection = document.getElementById('dunning-group-create-form-section');
             
             
-            const btnEditDunningGroupFormBack = document.getElementById('btn-edit-dunning-group-form-back');
-            btnEditDunningGroupFormBack.addEventListener("click", async (e) => {
-                await loadDunningGroupTable(true);
-                dunningGroupSetupSection.classList.remove("d-none");
-                dunningGroupEditFormSection.classList.add("d-none");
-            });
-
-            const editDunningGroupForm = document.getElementById("edit-dunning-group-form");
-            const editDunningGroupFormErrorMessage = document.getElementById("edit-dunning-group-form-error-message");
-
-            editDunningGroupForm.addEventListener("submit", async (e) => {
-                 e.preventDefault();
-
-                const formData = new FormData(editDunningGroupForm);
-                const body = Object.fromEntries(formData.entries());
-                const url = `${API_BASE}/dunningGroup.php?endpoint=edit_dunning`;
-                const response = await fetchAPI(url, body);
-                console.log(response.response);
-
-                if ( response.success  ) {
-                    const result = JSON.parse(response.response);
-                    if ( result.error_code == 0) {
-                        editDunningGroupFormErrorMessage.innerHTML = "Dunning Group Updated successfully";
-                    }
-                    else {
-                        editDunningGroupFormErrorMessage.innerHTML = "Dunning Group fail to edit. " + response.response.error_description + "(" + response.response.error_code+ ")";
-                    }
-                }
-                else {
-                    // const result = JSON.parse(response.response);
-                    editDunningGroupFormErrorMessage.innerHTML = "Dunning Group fail to edit.  "  + response.response.error_description + "(" + response.response.error_code+ ")";;
-                }
-            });
-
-            
             const dunningGroupVersionTableSection = document.getElementById('dunning-group-version-table-section');
             const dunningGroupVersionTable = document.getElementById('dunning-group-version-table');
             const dunningVersionEditFormSection = document.getElementById('dunning-version-edit-form-section');
-            
+            const editDunningGroupFormErrorMessage = document.getElementById("edit-dunning-group-form-error-message");
+
+
             const tableContainer = document.getElementById('dunning-group-setup-table');
             if (tableContainer) {
                 tableContainer.addEventListener('click', async (e) => {
@@ -124,16 +95,8 @@ export async function renderDunningGroupSetupTab(activeTab) {
 
                         console.log("dunningGroupName: " + dunningGroupName);
 
-                        const tsInstance = document.getElementById('select-dunning-group-name-edit').tomselect;
-                        if (tsInstance) {
-                            // Add the new option to the existing instance dataset
-                            tsInstance.addOption({ value: dunningGroupName, text: dunningGroupName });
-                            
-                            // Set it as the active selected item
-                            tsInstance.setValue(dunningGroupName);
-                        }
-
                         document.getElementById("dunning-group-id-edit").value = dunningGroupId;
+                        document.getElementById("dunning-group-name-edit").value = dunningGroupName;
                         document.getElementById("dunning-group-priority-edit").value = dunningGroupPriority;
                         document.getElementById("dunning-group-remark-edit").value = dunningGroupRemark;
 
@@ -277,14 +240,14 @@ export async function renderDunningGroupSetupTab(activeTab) {
 
                                 
 
-                                checkboxElement = document.getElementById(`crit-${criteria.criteria}`);
+                                checkboxElement = document.getElementById(`entry-crit-${criteria.criteria}`);
                                 checkboxElement.checked = true;
 
-                                optionElement = document.getElementById(`crit-${criteria.criteria}-option`);
+                                optionElement = document.getElementById(`entry-crit-${criteria.criteria}-option`);
                                 console.log("criteria operator: " + criteria.operator);
                                 optionElement.value = criteria.operator;
 
-                                valueElement = document.getElementById(`crit-${criteria.criteria}-value`);
+                                valueElement = document.getElementById(`entry-crit-${criteria.criteria}-value`);
                                 // 2. Handle assignments dynamically based on VARTYPE
                                 if (vartype === "SELECTION" || vartype === "MULTI_SELECTION" ) {
                                     const tomselect = valueElement.tomselect;
@@ -366,7 +329,8 @@ export async function renderDunningGroupSetupTab(activeTab) {
                             fillCriterias(dunningLogicResponse);
                         }
 
-                        document.getElementById('campaign-criteria-container').classList.remove('d-none');
+                        document.getElementById('campaign-entry-criteria-container').classList.remove('d-none');
+                        document.getElementById('campaign-exit-criteria-container').classList.remove('d-none');
                         dunningGroupVersionTableSection.classList.add("d-none");
                         dunningVersionEditFormSection.classList.remove("d-none")
                     }
@@ -406,10 +370,12 @@ export async function renderDunningGroupSetupTab(activeTab) {
                         }
 
                         if ( versionStatus == 1 ) { // Not Used
-                            document.getElementById('campaign-criteria-container').classList.remove('d-none');
+                            document.getElementById('campaign-entry-criteria-container').classList.remove('d-none');
+                            document.getElementById('campaign-exit-criteria-container').classList.remove('d-none');
                         }
                         else {
-                            document.getElementById('campaign-criteria-container').classList.add('d-none');
+                            document.getElementById('campaign-entry-criteria-container').classList.add('d-none');
+                            document.getElementById('campaign-exit-criteria-container').classList.add('d-none');
                         }
 
                         dunningGroupVersionTableSection.classList.add("d-none");
@@ -419,34 +385,10 @@ export async function renderDunningGroupSetupTab(activeTab) {
                 })
             }
             
-            const selectDunningGroupVersionStatus = document.getElementById('dunning-group-version-status-edit');
-            const campaignCriteriaContainer = document.getElementById('campaign-criteria-container');
-            selectDunningGroupVersionStatus.addEventListener('change', (e) => {
-                const selectedValue = e.target.value;
-                console.log(selectedValue);
-
-                if (selectedValue == "1") {
-                    campaignCriteriaContainer.classList.remove("d-none");
-                }
-                else {
-                    campaignCriteriaContainer.classList.add("d-none");
-                }
-            })
+            
 
 
-            const btnCriteriaFormBack = document.getElementById("btn-criteria-form-back");
-            btnCriteriaFormBack.addEventListener("click", async(e) => {
-                e.preventDefault();
-                dunningGroupVersionTableSection.classList.remove("d-none");
-                dunningVersionEditFormSection.classList.add("d-none");
-
-                const dunningGroupId = document.getElementById("dunning-group-version-dunning-id-edit").value;
-                const dunningGroupPriority = document.getElementById("dunning-group-version-dunning-priority-edit").value;
-                const dunningGroupName = document.getElementById("dunning-version-form-edit-dunning-name").textContent;
-
-                
-                await loadDunningVersionTable(dunningGroupId, dunningGroupPriority, dunningGroupName, true);
-            });
+            
 
             // const btnCreateDunningGroup = document.getElementById("btn-create-dunning-group");
             // btnCreateDunningGroup.addEventListener("click", (e) => {
@@ -472,6 +414,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
                     const btn = e.target.closest('.btn-edit-campaign');
                     if (btn) {
                         console.log("click btn-edit-campaign");
+                        
                         dunningGroupVersionTableSection.classList.add("d-none");
                         dunningVersionEditFormSection.classList.remove("d-none");
 
@@ -498,7 +441,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
 
                 // 2. Loop through entries to nest criteria fields matching criteria[X][Y]
                 for (let [key, value] of formData.entries()) {
-                    const match = key.match(/^criteria\[(\d+)\]\[(\w+)\]$/);
+                    const match = key.match(/^entry_criteria\[(\d+)\]\[(\w+)\]$/);
                     if (match) {
                         const index = match[1];
                         const field = match[2];
@@ -558,7 +501,7 @@ export async function renderDunningGroupSetupTab(activeTab) {
             });
             
 
-        }, 1000);
+        }, 2500);
         
         return html
 }

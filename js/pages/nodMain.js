@@ -11,7 +11,7 @@ export async function NodMain() {
 
     const html =  `
         <section class="container-fluid nod-section">
-            <div class="row">
+            <div class="row mb-1">
                 <div class="col">
                     <h1>NOD</h1>
                     <ul class="nav nav-tabs" id="nodTab" role="tablist">

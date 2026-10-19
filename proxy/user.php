@@ -75,6 +75,26 @@ switch ($endpoint) {
 
         echo $client->get("/usergroup/useredit.php", $token, $data, false);
         break;
+
+    case "lock_user";
+        $input = json_decode(file_get_contents('php://input'), true);
+        $data = [
+            "user_id" => (int) $input["userId"],
+            "lock" => $input["lock"]
+        ];  
+        echo $client->post("/auth/userlock.php", $token, $data, false);
+        
+        break;
+    
+    case "force_logout";
+        $input = json_decode(file_get_contents('php://input'), true);
+        $data = [
+            "user_id" => $input["userId"],
+        ];  
+        echo $client->post("/auth/forcelogout.php", $token, $data, false);
+        
+        break;
+
     default:
 
         http_response_code(404);

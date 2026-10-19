@@ -10,12 +10,15 @@ class ProxyClient {
     public function get($endpoint, $token, $data = [], $decode = false) {
         $url = $this->baseUrl . $endpoint;
         
+        $queryString = "";
         if (!empty($data)){
             if ($decode) {
-                $url .= "?" . urldecode(http_build_query($data));
+                $queryString = urldecode(http_build_query($data));
+                $url .= "?" . $queryString;
             }
             else {
-                $url .= "?".http_build_query($data);
+                $queryString = http_build_query($data);
+                $url .= "?".$queryString;
             }
         }
 
@@ -47,10 +50,10 @@ class ProxyClient {
         rewind($verbose);
         $verboseLog = stream_get_contents($verbose);
 
-        writeCurlLog('GET', $url, $token, $data, $response, $httpCode, $verboseLog);
+        writeCurlLog('GET', $url, $token, $queryString, $response, $httpCode, $verboseLog);
 
         if (curl_errno($ch)) {
-            writeCurlLog('GET', $url, $token, $data, curl_error($ch), $httpCode, $verboseLog);
+            writeCurlLog('GET', $url, $token, $queryString, curl_error($ch), $httpCode, $verboseLog);
 
             $returnResponse = [
                 "error_code" => "99",
@@ -84,8 +87,8 @@ class ProxyClient {
         $responseArray = json_decode($response, true);
 
         $returnResponse = [
-            "error_code" =>  $responseArray["error_code"] ,
-            "error_description" => $responseArray["error_description"]
+            "error_code" =>  $responseArray["error_code"] ?? "" ,
+            "error_description" => $responseArray["error_description"] ?? ""
         ];
         if ( !empty($responseArray["error_code"]) ) {
             $return = [
@@ -119,10 +122,16 @@ class ProxyClient {
 
     public function post($endpoint, $token, $data = []) {
 
+        error_log(print_r($data, true));
+        foreach ($data as $key => $value) {
+            if (is_string($value)) {
+                $data[$key] = trim($value);
+            }
+        }
+
 
         $ch = curl_init($this->baseUrl . $endpoint);
         $verbose = fopen('php://temp', 'w+');
-
 
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
@@ -131,12 +140,13 @@ class ProxyClient {
                 "Authorization: Bearer $token",
 		        // "User-Agent: Mozilla/5.0",
                 "Accept: application/json",
-                "Content-Type: application/x-www-form-urlencoded",
+                // "Content-Type: application/x-www-form-urlencoded",
                 // "Content-Type: application/json",
 
             ],
-            CURLOPT_POSTFIELDS =>  http_build_query($data),
+            // CURLOPT_POSTFIELDS =>  http_build_query($data),
             // CURLOPT_POSTFIELDS =>  json_encode($data),
+            CURLOPT_POSTFIELDS =>  $data,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_VERBOSE => true,
@@ -148,9 +158,9 @@ class ProxyClient {
 
         rewind($verbose);
         $verboseLog = stream_get_contents($verbose);
-
+    
         writeCurlLog('POST', $this->baseUrl . $endpoint, $token, $data, $response, $httpCode, $verboseLog);
-
+        
         if (curl_errno($ch)) {
             $return = [
                 "success" => false,

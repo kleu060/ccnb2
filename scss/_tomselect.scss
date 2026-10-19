@@ -13,7 +13,7 @@
     .ts-control {
         align-items: center;
         padding: 0px 4px;
-        border: 0;
+        // border: 0;
         // flex-wrap: nowrap;
 
         > * {
@@ -22,8 +22,8 @@
     }
 }
 
-#account-select-account-code-sub-info-opt-5, #account-select-account-code-sub-info-opt-6, #account-select-account-code-sub-info-opt-7 {
-    background-color: red;
-}
+// #account-select-account-code-sub-info-opt-5, #account-select-account-code-sub-info-opt-6, #account-select-account-code-sub-info-opt-7 {
+//     background-color: $light-grey;
+// }
 
 

@@ -13,21 +13,21 @@ let activeAssignmentListTable = null;
 const columnsConfig = {
     activeListAssignment: [
         { title: "Customer name", data: "customer_name" },
-        { title: "Customer ID", data: "customer_id" },
+        { title: "Customer ID", data: "cust_id" },
         {
             title: "Account Code",
             data: "account_code",
             render: function(data, type, row, meta) {
                 if (type === 'display') {
-                    return `<a href="/account-enquiry?account_code=${encodeURIComponent(data)}">${data}</a>`;
+                    return `<a href="/ccnb2/account-inquiry?acc_code=${encodeURIComponent(data)}">${data}</a>`;
                 }
                 return data;
             }
         },
         { title: "MSISDN", data: "msisdn" },
         { title: "ICCID", data: "iccid" },
-        { title: "Outstanding Balance", data: "outstanding_balance" },
-        { title: "Aging Balance", data: "aging_balance" },
+        { title: "Outstanding Balance", data: "total_due" },
+        { title: "Aging Balance", data: "total_overdue" },
     ]
 };
 
@@ -42,6 +42,8 @@ async function fetchData(formData) {
 // Initialize or rebuild DataTable
 export async function loadInquiryTable(formData) {
     const activeListAssignmentData = await fetchData(formData);
+
+    
 
     console.log(activeListAssignmentData);
 
@@ -59,7 +61,12 @@ export async function loadInquiryTable(formData) {
         data = [];
     }
     else {
-        data = JSON.parse(activeListAssignmentData.response);
+        const raw = activeListAssignmentData.response;
+
+        const safeJson = raw.replace(/("[\w_]+"\s*:\s*)([0-9]{15,})/g, '$1"$2"');
+        data = JSON.parse(safeJson);
+        
+        // data = JSON.parse(activeListAssignmentData.response);
     }
 
     

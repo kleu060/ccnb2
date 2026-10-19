@@ -1,0 +1,13 @@
+.modal {
+    .modal-content {
+        max-height: 90vh;
+        overflow: auto;
+    }
+    @media (min-width: 576px) {
+        .modal-dialog {
+            max-width: unset;
+            min-width: var(--bs-modal-width);;
+            width: min-content;
+        }
+    }
+}

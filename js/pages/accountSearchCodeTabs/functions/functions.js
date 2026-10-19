@@ -15,17 +15,22 @@ export async function accCodeFormSubmit(tab) {
     selectAccountCodeSubInfo.selectedIndex = 0;
     selectAccountCodeSubInfo.dispatchEvent(new Event('change', { bubbles: true }));
 
-    let fetchResult = await getAccount(searchType, accCode);
-    console.log(fetchResult);
+    let fetchResultPart = await getAccount(searchType, accCode);
 
-    console.log("acc_code: " + fetchResult.acc_code)
-    console.log("acc_id: " + fetchResult.acc_id)
-    const actions = await getAccountActionHistory(fetchResult.acc_id);
+    console.log(fetchResultPart);
 
-    console.log(actions);
     
-    if (!isEmptyFetchResult(fetchResult))  {
-        updateAccountData(fetchResult);
+    
+    // if (!fetchResultPart)  {
+    if (fetchResultPart !== undefined && fetchResultPart !== null) {
+
+        console.log("acc_code: " + fetchResultPart.acc_code)
+        console.log("acc_id: " + fetchResultPart.acc_id)
+        const actions = await getAccountActionHistory(fetchResultPart.acc_id);
+
+        console.log(actions);
+        
+        updateAccountData(fetchResultPart);
         updateActionData(actions.result);
         
         document.getElementById(tab + "-account-code-no-result-container").classList.add("d-none");
@@ -54,13 +59,16 @@ export async function accIdFormSubmit(tab) {
     let fetchResult = await getAccount(searchType, accId);
     console.log(fetchResult);
 
-    console.log("acc_code: " + fetchResult.acc_code)
-    console.log("acc_id: " + fetchResult.acc_id)
-    const actions = await getAccountActionHistory(fetchResult.acc_id);
+    
 
-    console.log(actions);
+    if (fetchResult !== undefined && fetchResult !== null) {
 
-    if (!isEmptyFetchResult(fetchResult))  {
+        console.log("acc_code: " + fetchResult.acc_code)
+        console.log("acc_id: " + fetchResult.acc_id)
+        const actions = await getAccountActionHistory(fetchResult.acc_id);
+
+        console.log(actions);
+        
         updateAccountData(fetchResult);
         updateActionData(actions.result);
         
@@ -76,9 +84,25 @@ export async function accIdFormSubmit(tab) {
 }
 
 export async function getAccountCodeSubInfo(e, tab) {
-
     const searchType = e.target.value;
-    const accId = document.getElementById(tab + "-account-code-acc-id").textContent;
+
+    console.log("search type: " + searchType);
+    let accId;
+    /* Ricky: for blhistory, need to supply acc_code, for contact, need cust_id */
+
+    if (searchType == "blhistory") {
+        accId = document.getElementById(tab + "-account-code-acc-code").textContent;
+        console.log("1: " + accId);
+    }
+    else if (searchType == "contact") {
+        accId = document.getElementById(tab + "-account-code-customer-id").textContent;
+        console.log("2: " + accId);
+    }
+    else {
+        accId = document.getElementById(tab + "-account-code-acc-id").textContent;
+        console.log("3: " + accId);
+    }
+
     let fetchSubInfoResult = await getAccountSubInfo(searchType, accId);
 
     console.log(fetchSubInfoResult);
@@ -87,13 +111,13 @@ export async function getAccountCodeSubInfo(e, tab) {
     loadDebtorTable(searchType, fetchSubInfoResult, tab);
 }
 
-export async function updateContactType(contactType, contactTypeValue, tab) {
+/* deprecated */
+export async function updateContactType(contactType, contact_info, tab) {
     const accId = document.getElementById(tab + "-account-code-acc-id").textContent;
 
     const body = {
         accId,
-        contactType,
-        contactTypeValue
+        contact_info
     };
 
     const url = `${API_BASE}/index.php?endpoint=agent-update-contact`;
@@ -116,29 +140,51 @@ function isEmptyFetchResult(v) {
 function clearAccountData() {
     window.dispatchEvent(new CustomEvent('update-account', {
         detail: {
-            name: "",
-            identity_id: "",
-            acc_code: "",
-            cust_id: "",
-            acc_id: "",
-            parent_acc_id: "",
-            acc_create_date: "",
-            status: "",
-            status_date: "",
-            writeoff: "",
-            overdue_amt: "",
-            dunning_grp: "",
-            npsi: "",
-            os_bal: "",
-            last_pay_date: "",
-            bill_cycle: "",
-            credit_limit: "",
-            payment_mode: "",
-            acc_cat: "",
-            ctc: "",
-            big: "",
-            credit_bal: "",
-            redlist: "",
+            acc_cat: '',
+            acc_code: '',
+            acc_create_date: '',
+            acc_id: '',
+            acc_status: '',
+            acc_status_date: '',
+            big: '',
+            bill_cycle: '',
+            billable: '',
+            blacklist_status: '',
+            call_agent: '',
+            campaign: '',
+            collection_end: '',
+            collection_start: '',
+            collection_status: '',
+            credit_bal: '',
+            credit_limit: '',
+            credit_score: '',
+            ctc: '',
+            cust_id: '',
+            dca_code: '',
+            disposition: '',
+            dunning_group: '',
+            id_number: '',
+            last_pay_date: '',
+            last_suspend_date: '',
+            last_term_date: '',
+            nod: '',
+            nod_date: '',
+            npsi: '',
+            oldest_due_date: '',
+            os_bal: '',
+            overdue_amt: '',
+            overdue_days: '',
+            parent_acc_id: '',
+            payment_mode: '',
+            primary_offer: '',
+            principle_sub_id: '',
+            status_date: '',
+            subs_status: '',
+            subs_status_date: '',
+            writeoff: '',
+            writeoff_date: '',
+            name: '',
+            identity_id: '',
         }
     }));
 }
@@ -148,29 +194,52 @@ function updateAccountData(account) {
     console.log(account);
     window.dispatchEvent(new CustomEvent('update-account', {
         detail: {
-            name: account.name ?? "Chan Tai Meng",
-            identity_id: account.identity_id ?? "730212345678",
-            acc_code: account.acc_code,
-            cust_id: account.cust_id,
-            acc_id: account.acc_id,
-            acc_create_date: account.acc_create_date ? account.acc_create_date.split(' ')[0] : account.acc_create_date,
-            parent_acc_id: account.parent_acc_id,
-            status: account.status,
-            status_date: account.status_date ? account.status_date.split(' ')[0] : account.status_date,
-            writeoff: account.writeoff,
-            overdue_amt: account.overdue_amt,
-            dunning_grp: account.dunning_grp,
-            npsi: account.npsi,
-            os_bal: account.os_bal,
-            last_pay_date: account.last_pay_date ? account.last_pay_date.split(' ')[0]: account.last_pay_date,
-            bill_cycle: account.bill_cycle,
-            credit_limit: account.credit_limit,
-            payment_mode: account.payment_mode,
             acc_cat: account.acc_cat,
-            ctc: account.ctc,
+            acc_code: account.acc_code,
+            acc_create_date: account.acc_create_date,
+            acc_id: account.acc_id,
+            acc_status: account.acc_status,
+            acc_status_date: account.acc_status_date,
             big: account.big,
+            bill_cycle: account.bill_cycle,
+            billable: account.billable,
+            blacklist_status: account.blacklist_status,
+            call_agent: account.call_agent,
+            campaign: account.campaign,
+            collection_end: account.collection_end,
+            collection_start: account.collection_start,
+            collection_status: account.collection_status,
             credit_bal: account.credit_bal,
-            redlist: account.redlist,
+            credit_limit: account.credit_limit,
+            credit_score: account.credit_score,
+            ctc: account.ctc,
+            cust_id: account.cust_id,
+            dca_code: account.dca_code,
+            disposition: account.disposition,
+            dunning_group: account.dunning_group,
+            id_number: account.id_number,
+            last_pay_date: account.last_pay_date,
+            last_suspend_date: account.last_suspend_date,
+            last_term_date: account.last_term_date,
+            nod: account.nod,
+            nod_date: account.nod_date,
+            npsi: account.npsi,
+            oldest_due_date: account.oldest_due_date,
+            os_bal: `$${account?.os_bal ?? "0"}`,
+            overdue_amt: "$"+account.overdue_amt,
+            overdue_days: account.overdue_days,
+            parent_acc_id: account.parent_acc_id,
+            payment_mode: account.payment_mode,
+            primary_offer: account.primary_offer,
+            principle_sub_id: account.principle_sub_id,
+            status_date: account.status_date,
+            subs_status: account.subs_status,
+            subs_status_date: account.subs_status_date,
+            writeoff: account.writeoff,
+            writeoff_date: account.writeoff_date,
+            name: account.cust_name ?? "Unknown",
+            identity_id: account.id_number ?? "0",
+            
         }
     }));
 }

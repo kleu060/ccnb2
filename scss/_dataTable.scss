@@ -23,6 +23,8 @@
             }
 
             &.dt-type-numeric, &.dt-type-date {
+                
+
                 div.dt-column-header {
                     flex-direction: row;
 
@@ -34,7 +36,7 @@
         }
 
         td {
-            &.dt-type-numeric {
+            &.dt-type-numeric, &.dt-type-date {
                 text-align: left;
             }
         }

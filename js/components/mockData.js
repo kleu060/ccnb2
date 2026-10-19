@@ -380,7 +380,7 @@ export const mockAdjustmentData = {
 export const customerMockData = {
     data: [
         {
-            account_code: '<a href="/account-inquiry?account_code=5000001920789">5000001920789</a>',
+            account_code: '<a href="/ccnb2/account-inquiry?acc_code=5000001920789">5000001920789</a>',
             account_id: '100000000000377548',
             subscribe_id: '',
             parent_acct_id: '',

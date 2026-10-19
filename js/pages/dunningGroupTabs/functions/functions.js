@@ -27,15 +27,13 @@ const columnsConfig = {
     ],
 
     campaign_list: [
-        { title: "Campaign ID", data: "campaign_id" },
+        { title: "Campaign ID", data: "id" },
         { title: "Campaign Name", data: "campaign_name" },
         { title: "Dunning Group Name", data: "dunning_group_name" },
-        { title: "Type", data: "type" },
-        { title: "Priority", data: "priority" },
-        { title: "Call Group", data: "call_group" },
+        { title: "Validity", data: "validity" },
+        { title: "Call Group", data: "callgroup" },
         { title: "Create Date", data: "create_date" },
-        { title: "Start Date", data: "start_date" },
-        { title: "Expiry Date", data: "expiry_date" },
+
     ],
     campaign_list_setup: [
         {
@@ -43,15 +41,13 @@ const columnsConfig = {
             data: "action",
             defaultContent: '<button class="btn btn-primary">Edit</button>'
         },
-        { title: "Campaign ID", data: "campaign_id" },
+        { title: "Campaign ID", data: "id" },
         { title: "Campaign Name", data: "campaign_name" },
         { title: "Dunning Group Name", data: "dunning_group_name" },
-        { title: "Type", data: "type" },
-        { title: "Priority", data: "priority" },
-        { title: "Call Group", data: "call_group" },
-        { title: "Create Date", data: "create_date" },
-        { title: "Start Date", data: "start_date" },
-        { title: "Expiry Date", data: "expiry_date" },
+        { title: "Overdue Days", data: "overdue_days" },
+        { title: "Validity", data: "validity" },
+        { title: "Status", data: "status" },
+        { title: "Remark", data: "remark" },
     ],
     dunning_group_version: [
         { title: "ID", data: "id" },
@@ -96,11 +92,8 @@ const columnsConfig = {
 
 
 // let table = null;
-let campaignTable = null;
 // let dunningGroupSetupTable = null;
-let campaignSetupTable = null;
-
-async function getDunningGroups() {
+export async function getDunningGroups() {
     // await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
     // return mockData["dunning_group"] || [];
 
@@ -270,8 +263,16 @@ export async function loadDunningGroupTable(isEdit = false) {
 
 
 async function getCampaignList () {
-    await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
-    return mockData["campaigns"] || [];
+    // await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
+    // return mockData["campaigns"] || [];
+    const url = `${API_BASE}/dunningGroup.php?endpoint=list_internal_campaign`;
+    const responseJson = await fetchAPI(url);
+    if ( responseJson.success == true ) {
+        return JSON.parse(responseJson.response);
+    }
+    else {
+        console.error("Failed to fetch campaign data");
+    }
 }
 
 async function getCampaignListSetup () {
@@ -362,43 +363,112 @@ export async function loadDunningVersionTable(dunningGroupId, dunningGroupPriori
 
 
 }
-
+let campaignTable = null;
+let campaignSetupTable = null;
 export async function loadCampaignListTable(isEdit) {
 
-    let campaignTable = null;
-    let data = null;
+    let data = [];
 
     let tableName = "";
     let columnConfg = "";
 
     if ( isEdit ) {
-        data = await getCampaignListSetup();
+        const tmpData = await getCampaignList();
         tableName = "campaign-list-setup-table";
         columnConfg = "campaign_list_setup";
 
+        const type = "Dunning";
+        const body = {type};
+        const url = `${API_BASE}/getMapping.php`;
+        const dunningJson  = await fetchAPI(url, body);
+    
+        const campaignType = dunningJson.Campaign.Type;
+        const campaignStatus = dunningJson.Campaign.Status;
 
+        for (const campaign of tmpData) {
+
+
+            const statusObj = Object.values(campaignStatus).find(s => s.ID === Number(campaign.status));
+            const statusDisplay = statusObj ? statusObj.DISPLAY : (campaign.type ?? "0");
+
+            let tmp = {   
+                action: '<button class="btn btn-primary btn-edit-campaign-setting" data-campaign-id="'+campaign.id+'">Edit</button>',
+                id: campaign.id,
+                campaign_name: campaign.campaign_name,
+                overdue_days: campaign.overdue_days,
+                dunning_group_name: campaign.dunning_group_name,
+                validity: campaign.validity ?? "",
+                status: statusDisplay ?? "",
+                remark: campaign.remark ?? "",
+                
+            };
+            data.push(tmp);
+        }
+
+        if (campaignTable) {
+            campaignTable.destroy();
+            document.querySelector("#" + tableName + " tbody").innerHTML = "";
+            // document.querySelector("#user-management-table-header").innerHTML = "";
+        }
+
+        
+        // Create new DataTable
+        campaignTable = new DataTable("#" + tableName, {
+            data: data,
+            columns: columnsConfig[columnConfg],
+            searching: false,
+            stateSave: true
+        });
     }
     else {
 
         tableName = "campaign-list-table";
-        data = await getCampaignList();
+        const tmpData = await getCampaignList();
         columnConfg = "campaign_list";
 
-    }
-    
-    if (campaignTable) {
-        campaignTable.destroy();
-        document.querySelector("#" + tableName + " tbody").innerHTML = "";
-        // document.querySelector("#user-management-table-header").innerHTML = "";
-    }
+        const type = "Dunning";
+        const body = {type};
+        const url = `${API_BASE}/getMapping.php`;
 
-    // Create new DataTable
-    campaignTable = new DataTable("#" + tableName, {
-        data: data,
-        columns: columnsConfig[columnConfg],
-        searching: false,
-        stateSave: true
-    });
+        // const dunningJson  = await fetchAPI(url, body);
+        // const campaignType = dunningJson.Campaign.Type;
+
+        for (const campaign of tmpData) {
+            // const typeObj = Object.values(campaignType).find(s => s.ID === Number(campaign.type));
+            // const typeDisplay = typeObj ? typeObj.DISPLAY : (campaign.type ?? "0");
+
+            let tmp = {   
+                id: campaign.id,
+                campaign_name: campaign.campaign_name,
+                dunning_group_name: campaign.dunning_group_name,
+                validity: campaign.validity ?? "",
+                callgroup: campaign.callgroup ?? "",
+                create_date: campaign.create_date ?? "2026-09-15",
+                
+            };
+            data.push(tmp);
+        }
+
+        if (campaignSetupTable) {
+            campaignSetupTable.destroy();
+            document.querySelector("#" + tableName + " tbody").innerHTML = "";
+            // document.querySelector("#user-management-table-header").innerHTML = "";
+        }
+
+        
+        // Create new DataTable
+        campaignSetupTable = new DataTable("#" + tableName, {
+            data: data,
+            columns: columnsConfig[columnConfg],
+            searching: false,
+            stateSave: true
+        });
+    }
+    console.log("loadCampaignListTable");
+    console.log(data);
+
+    
+    
 }
 
 export async function getUserForAgent() {
@@ -447,6 +517,7 @@ export async function loadAgentManagementTable() {
         data.push(tmp);
     });
 
+
     if (agentManagementTable) {
         agentManagementTable.destroy();
         document.querySelector("#" + tableName + " tbody").innerHTML = "";
@@ -463,8 +534,9 @@ export async function loadAgentManagementTable() {
 
 }
 
+export async function getCampaignData () {
 
-
+}
 
 // export async function loadCampaignListSetupTable() {
 //     const data = await getCampaignListSetup();

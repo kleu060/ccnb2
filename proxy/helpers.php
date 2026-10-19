@@ -22,7 +22,7 @@
         // prepare data string
         $dataStr = '';
         if (is_array($data)) {
-            $dataStr = http_build_query($data);
+            $dataStr = print_r($data, true);;
         } else {
             $dataStr = (string) $data;
         }

@@ -10,8 +10,8 @@ export async function rendorAccountTableSection(tab) {
                             <option value="invoice">Invoice</option>
                             <option value="payment">Payment</option>
                             <option value="collection">Collection</option>
-                            <option value="aging_bucket" class="dummy">Aging Bucket</option>
-                            <option value="blacklist_history">Blacklist History</option>
+                            <option value="aging">Aging Bucket</option>
+                            <option value="blhistory">Blacklist History</option>
                             <option value="contact">Contact</option>
                         </select>
                     </div>

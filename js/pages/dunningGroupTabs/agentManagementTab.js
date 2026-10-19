@@ -54,11 +54,16 @@ export async function renderAgentManagementTab(activeTab) {
                             const caller_id = agent.caller_id;
                             const remark = agent.remark;
 
-                            const options = await getUserForAgentOptions();
-                            const userForAgentAdd = document.getElementById('user-for-agent-edit');
-                            userForAgentAdd.innerHTML = options;
-                            userForAgentAdd.value = userId;
+                            // const options = await getUserForAgentOptions();
+                            // const userForAgentAdd = document.getElementById('user-for-agent-edit');
+                            // userForAgentAdd.innerHTML = options;
+                            // userForAgentAdd.value = userId;
+                            
 
+
+                            document.getElementById('caller-id-edit').innerHTML = agent.id;
+                            document.getElementById('caller-name-edit').innerHTML = agent.user_name;
+                            document.getElementById('caller-full-name-edit').innerHTML = agent.user_fullname;
                             document.getElementById('agent-id').value = agentId;
                             document.getElementById('caller-id-edit').value = caller_id;
                             document.getElementById('callgroup-id-edit').value = callgroupId;

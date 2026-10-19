@@ -1,4 +1,4 @@
-//Page 2001
+//Page 201, Account Search 
 import { loadInquiryTable } from "../components/inquiry.js";
 import { logEvent } from '../logEvent.js';
 
@@ -23,7 +23,7 @@ export async function Inquiry() {
                         <div class="card-body" >
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                    <h4>Account Search</h4>
+                                    <h1>Account Search</h1>
                                 </div>
                             </div>
                             <div class="row justify-content-start">
@@ -37,7 +37,7 @@ export async function Inquiry() {
                                                         <option value="">Select Field</option>
                                                         <option value="account_code">Account Code</option>
                                                         <option value="customer_name">Customer Name</option>
-                                                        <option value="id_number">ID Number</option>
+                                                        <option value="id_number">Identity Number</option>
                                                         <option value="msisdn">Phone Number</option>
                                                         <option value="invoice_number">Invoice Number</option>
                                                     </select>

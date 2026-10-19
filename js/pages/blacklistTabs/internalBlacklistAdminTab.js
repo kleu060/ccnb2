@@ -1,9 +1,9 @@
+// Page 404, Blacklist > Internal Blacklist (Admin)
+
 import { API_BASE } from '../../config.js';
 import { logEvent } from '../../logEvent.js';
 import { fetchAPI } from '../../api/fetch-api.js';
 import { fetcIdBlackListSearchData, loadBlacklistAdminTable  } from './functions/functions.js';
-
-
 
 export async function renderInternalBlackListAdminTab() {
     const userType = "admin";
@@ -31,7 +31,7 @@ export async function renderInternalBlackListAdminTab() {
                             <template x-if="$store.user_data.latest_id_blacklist_file_${userType}">
                                 <div>
                                     Download 
-                                    <a :href="'${API_BASE}/download-blocklist.php?file=' + $store.user_data.latest_id_blacklist_file" download>
+                                    <a :href="'${API_BASE}/download-blacklist.php?file=' + $store.user_data.latest_id_blacklist_file" download>
                                         <span x-text="$store.user_data.latest_id_blacklist_file_${userType}"></span>
                                     </a>
                                 </div>
@@ -46,7 +46,7 @@ export async function renderInternalBlackListAdminTab() {
                                 <div class="field-group justify-content-start flex-column ">
                                     <div class="d-flex align-items-center">
                                         <label>Bulk Upload</label> 
-                                        <a class="text-nowrap" href="${API_BASE}/download-blocklist.php?file=sample-id-blacklist.xlsx">Download Sample</a>
+                                        <a class="text-nowrap" href="${API_BASE}/download-blacklist.php?file=sample-id-blacklist.xlsx">Download Sample</a>
                                     </div>
                                     <input type="file" id="file-bulk-upload-admin">
                                 </div>
@@ -159,7 +159,7 @@ export async function renderInternalBlackListAdminTab() {
                     // SUCCESS: Executed when the fetch completely finishes                    
                     // Show the download link or success message
                     if (data.success) {
-                        idBlacklistExcelDownloadMessage.innerHTML = `Download <a href="${API_BASE}/download-blocklist.php?file=${data.response}" download> ${data.response}`;
+                        idBlacklistExcelDownloadMessage.innerHTML = `Download <a href="${API_BASE}/download-blacklist.php?file=${data.response}" download> ${data.response}`;
                     }
                     else {
                         if ( data.response.error_code == 2) {

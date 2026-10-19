@@ -24,20 +24,24 @@ if ( $checkedAgreeLegalNotice != "agree" ) {
 }
 $verbose = fopen('php://temp', 'w+');
 
-$url = API_URL."/auth/login.php?username=".$username."&password=".$password;
+$url = API_URL."/auth/login.php";
 $ch = curl_init($url);
 // echo $url; exit();
+
+$data = [
+        "username" => $username,
+        "password" => $password
+];
+// $data = json_encode($dataTmp);
 
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
     CURLOPT_HTTPHEADER => [
-        "Content-Type: application/json"
+        "Accept: application/json",
+        // "Content-Type: application/json", // Tell the server JSON is arriving
     ],
-    CURLOPT_POSTFIELDS => json_encode([
-        "username" => $username,
-        "password" => $password
-    ]),
+    CURLOPT_POSTFIELDS => $data,
     CURLOPT_VERBOSE => true,
     CURLOPT_STDERR => $verbose,
 ]);
@@ -50,7 +54,7 @@ rewind($verbose);
 $verboseLog = stream_get_contents($verbose);
 curl_close($ch);
 
-writeCurlLog('POST', $url , "", [], $response, $httpCode, $verboseLog);
+writeCurlLog('POST', $url , "", $data, $response, $httpCode, $verboseLog);
 $result = json_decode($response, true);
 
 if (isset($result['access_token'])) {

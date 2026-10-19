@@ -21,7 +21,7 @@ export async function renderCampaignTable(isEdit = false) {
     
         setTimeout(function(){
             loadCampaignListTable(isEdit);
-        }, 500);
+        }, 2000);
     
         return html;
 }

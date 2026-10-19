@@ -21,7 +21,8 @@ const columnsConfig = {
                     <option value="2">BKK</option>
                 </select>
             `
-        }, 
+        },
+
 
         
     ],
@@ -31,7 +32,9 @@ const columnsConfig = {
         { title: "MSISDN", data: "msisdn" },
         { title: "Account Type", data: "account_type" },
         { title: "CTC", data: "ctc" },
-        { title: "Credit Limit", data: "credit_limit" },   
+        { title: "Credit Limit", data: "credit_limit" },
+        { title: "Outstanding Balance", data: "outstanding_balance"},
+        { title: "Overdue Amount", data: "overdue_amount"}
     ],
     distirubtionProfileData: [
         
@@ -44,6 +47,14 @@ const columnsConfig = {
         { title: "Frequency", data: "frequency" },
     ],
     picData: [
+        { title: "Action", data: "action" },
+        { title: "Name", data: "name" },
+        { title: "Full Name", data: "full_name" },
+        { title: "Email", data: "email" },
+        { title: "Phone", data: "phone" },
+
+    ],
+    picSalesManagerData: [
         { title: "Action", data: "action" },
         { title: "Name", data: "name" },
         { title: "Full Name", data: "full_name" },
@@ -83,15 +94,25 @@ export async function renderAccoutListingTable () {
 
 }
 
-export async function getAccountHierarchyData() {
+export async function getAccountHierarchyData(acc_id) {
     await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
     return mockData["accountHierarchygData"] || [];
+
+    // const url = `${API_BASE}/enterprise.php?endpoint=list_account_hierarchy&acc_id=${acc_id}`;
+    // const responseJson = await fetchAPI(url);
+    // if ( responseJson.success == true ) {
+    //     return JSON.parse(responseJson.response);
+    // }
+    // else {
+    //     console.error("Failed to fetch campaign data");
+    // }
+
 }
 
 
 let accountHierarchytable = null;
-export async function renderAccountHierarchyTable () {
-    const data = await getAccountHierarchyData();
+export async function renderAccountHierarchyTable (acc_id) {
+    const data = await getAccountHierarchyData(acc_id);
 
     if (accountHierarchytable) {
         accountHierarchytable.destroy();
@@ -160,6 +181,33 @@ export async function renderPicTable() {
     picTable = new DataTable("#pic-table", {
         data: data,
         columns: columnsConfig["picData"],
+        searching: false,
+        language: {
+            emptyTable: "No Data"
+        }
+    });
+}
+
+
+async function getPicSalesAccountData() {
+    await new Promise(resolve => setTimeout(resolve, 200)); // simulate API
+    return mockData["picSalesAccountData"] || [];
+}
+
+let picSalesAccountTable = null;
+export async function renderPicSalesAccountTable() {
+    const data = await getPicSalesAccountData();
+
+    if (picSalesAccountTable) {
+        picTable.destroy();
+        document.querySelector("#pic-sales-account-table tbody").innerHTML = "";
+        document.querySelector("#pic-sales-account-table thead").innerHTML = "";
+    }
+    
+    // Create new DataTable
+    picSalesAccountTable = new DataTable("#pic-sales-account-table", {
+        data: data,
+        columns: columnsConfig["picSalesManagerData"],
         searching: false,
         language: {
             emptyTable: "No Data"

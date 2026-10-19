@@ -10,14 +10,25 @@ form {
     display: flex;
     justify-content: start;
     font-weight: bold;
+    color: $bright-blue;
     
     label {
         width: 50%;       
     }
+
     
     input[type=text], select {
         margin-bottom: 0px;
     }
 
 
+}
+
+.form-control {
+    font-size:12px;
+} 
+
+.form-select-sm {
+    font-size: 1em;
+    padding-left: 0.25rem;
 }

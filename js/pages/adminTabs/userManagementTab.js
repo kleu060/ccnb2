@@ -60,8 +60,6 @@ export async function renderUserManagementTab() {
                     url = `${API_BASE}/user.php?endpoint=add_user`;
                     successMessage = "User successfully created.";
                     errorMessage = "User fail to create.";
-
-                    
                 }
                 else {
                     url = `${API_BASE}/user.php?endpoint=edit_user`;
@@ -71,7 +69,6 @@ export async function renderUserManagementTab() {
 
                 const response = await fetchAPI(url, body);
                 console.log(response.response);
-
 
                 if ( response.success  ) {
                     const result = JSON.parse(response.response);
@@ -149,7 +146,7 @@ export async function renderUserManagementTab() {
                 });
             });
 
-        }, 500);
+        }, 1000);
 
         
 

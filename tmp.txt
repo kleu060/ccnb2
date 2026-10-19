@@ -1,0 +1,18 @@
+/* MAP Constant display */
+let type = "Contact";
+let body = {
+    type
+};
+const url = `${API_BASE}/getMapping.php`;
+const contactJson  = await fetchAPI(url, body);
+contactStatusMapping  = contactJson.Status;
+
+const obj = Object.values(accountDispositionCodeMapping).find(s => s.ID === Number(data));
+const display = obj ? obj.DISPLAY : (data ?? "1");
+
+
+
+/* Dropdown option */
+let statusOptions = Object.values(dunningStatus).map(status => `
+    <option value="${status.ID}">${status.DISPLAY}</option>
+`).join('');

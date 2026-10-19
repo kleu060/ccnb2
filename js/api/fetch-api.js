@@ -1,4 +1,6 @@
 import { logEvent } from '../logEvent.js';
+import { APP_ROOT, API_BASE } from '../config.js';
+
 
 export async function fetchAPI(url, data = "", contentType = "") {
 
@@ -30,12 +32,20 @@ export async function fetchAPI(url, data = "", contentType = "") {
 
     if (!responseJson.success && errorCode ==  2) {
 
+        const response= await fetch(`${API_BASE}/index.php?endpoint=logout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        });
+        
         document.getElementById("expire-container").style.display = "block";
         //access token expire;
         setTimeout(function(){
             document.getElementById("expire-container").style.display = "none";
             window.location.href="/ccnb2/login?msg=Access token expired";
-        }, 3000);
+        }, 1000);
     }
 
     logEvent('info', 'API response - ' + JSON.stringify(responseJson) );

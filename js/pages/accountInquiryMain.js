@@ -43,7 +43,7 @@ export async function AccountInquiryMain() {
 
     const updateTab = hasUpdateAccess 
         ?  `<li class="nav-item" role="presentation">
-                <button class="nav-link bg-light-grey" id="btn-update-tab" data-bs-toggle="tab" data-bs-target="#update-tab" type="button" role="tab" aria-controls="update-tab" aria-selected="false" data-parent="Account Inquiry">Update</button>
+                <button class="nav-link" id="btn-update-tab" data-bs-toggle="tab" data-bs-target="#update-tab" type="button" role="tab" aria-controls="update-tab" aria-selected="false" data-parent="Account Inquiry">Update</button>
             </li>`
         : '';
     

@@ -1,9 +1,10 @@
+// Page 203, Account Inquiry Account
 import { getAccountActionHistory } from "../../api/account-api.js";
 // import { loadDebtorTable } from "../../components/debtor-table.js";
 import { rendorSearchFormSection } from "./components/searchFormSection.js";
 import { rendorAccountDetailSection } from "./components/accountDetailSection.js";
 import { rendorNoResultSection } from "./components/noResultSection.js";
-import { rendorAgentUpdateSection } from "./components/agentUpdateSection.js";
+// import { rendorAgentUpdateSection } from "./components/agentUpdateSection.js";
 import { rendorAccountTableSection } from "./components/accountTableSection.js";
 import { rendorActionHistorySection } from "./components/actionHistorySection.js";
 import { accCodeFormSubmit, accIdFormSubmit, getAccountCodeSubInfo } from "./functions/functions.js";
@@ -17,9 +18,9 @@ export async function renderAccountTab() {
     const tab = "account";
 
     const rendorSearchFormSectionHtml = await rendorSearchFormSection(tab, accCode);
-    const rendorAccountDetailSectionHtml = await rendorAccountDetailSection(tab);
     const rendorNoResultSectionHtml = await rendorNoResultSection(tab);
-    const renderAgentUpdateSectionHtml = await rendorAgentUpdateSection(tab);
+    const rendorAccountDetailSectionHtml = await rendorAccountDetailSection(tab);
+    // const renderAgentUpdateSectionHtml = await rendorAgentUpdateSection(tab);
     const rendorAccountTableSectionHtml  = await rendorAccountTableSection(tab);
     const rendorActionHistorySectionHtml = await rendorActionHistorySection(tab);
 
@@ -39,7 +40,7 @@ export async function renderAccountTab() {
                         ` + rendorAccountDetailSectionHtml +`
 
                         <!-- Account Code Table -->
-                        <div class="card">
+                        <div class="card mt-1">
                             <div class="card-body">
                                 ` + rendorAccountTableSectionHtml + `
                             </div>
@@ -81,13 +82,16 @@ export async function renderAccountTab() {
             e.preventDefault();
             console.log("accountTabselectAccountCodeSubInfo");
             getAccountCodeSubInfo(e, tab);
+
         });
 
         if ( accCode != "" ) {
             accCodeFormSubmit("account");
         }
+        
+        
 
-    }, 500 );
+    }, 2000 );
 
 
 

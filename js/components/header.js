@@ -8,7 +8,8 @@ export function renderHeader() {
                 <a class="logo pe-2 border-end" href="/" data-link><img src="img/celcomdigi_logo.png" /></a>
                 <h1 class="ps-2">Credit Control Portal</h1>
             </div>
-            <div>
+
+            <div  x-show="$store.user_data.username">
                 <a href="${APP_ROOT}/welcome">Hello, <span x-text="$store.user_data.username" id="profile_name"></span></a>
                 (<span x-text="$store.user_data.groupName" id="group_name"></span>)
             </div>

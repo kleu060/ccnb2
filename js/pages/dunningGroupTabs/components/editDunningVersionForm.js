@@ -31,53 +31,105 @@ export async function renderEditDunningVersionForm() {
         <option value="${status.ID}">${status.DISPLAY}</option>
     `).join('');
 
-    let criteriaOptions = Object.values(dunningCriteria).map(criteria => `
-        <div class="row mb-1" data-id="${criteria.ID}">
-            <div class="col-1 d-flex align-items-center">
-                <input type="checkbox" class="crit-enable-checkbox" name="criteria[${criteria.ID}][enable]" id="crit-${criteria.ID}"/>
-            </div>
-            <div class="col-3 d-flex align-items-center">
-                ${criteria.DISPLAY} 
-            </div>
-            <div class="col-3 d-flex align-items-center">
-                <select class="" class="crit-operators-select" name="criteria[${criteria.ID}][option]" id="crit-${criteria.ID}-option">
-                    <option value="">-- Select operator --</option>
-                    ${operatorOptions}
-                </select>
-            </div>
-            <div class="col-4">
-                
 
+    // Cleaned up template function to generate criteria HTML dynamically
+    function generateCriteriaHtml(dunningCriteria, operatorOptions, prefix = 'criteria') {
+        return Object.values(dunningCriteria).map(criteria => `
+            <div class="row mb-1" data-id="${criteria.ID}">
+                <div class="col-1 d-flex align-items-center">
+                    <input type="checkbox" class="crit-enable-checkbox" name="${prefix}[${criteria.ID}][enable]" id="${prefix}-crit-${criteria.ID}"/>
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                    ${criteria.DISPLAY} 
+                </div>
+                <div class="col-3 d-flex align-items-center">
+                    <!-- FIXED: Merged duplicate class attributes -->
+                    <select class="form-control crit-operators-select" name="${prefix}[${criteria.ID}][option]" id="${prefix}-crit-${criteria.ID}-option">
+                        <option value="">-- Select operator --</option>
+                        ${operatorOptions}
+                    </select>
+                </div>
+                <div class="col-4">
                     ${criteria.VARTYPE === "SELECTION" ? `
-                        <select class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <select class="criteria-values form-control no-add" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                             <option value="">-- Select option --</option>
                             ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
                                 <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
                             `).join('') : ''}
                         </select>
                     ` : criteria.VARTYPE === "MULTI_SELECTION" ? `
-                        <select multiple class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <select multiple class="criteria-values form-control no-add" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                             <option value="">-- Select option --</option>
                             ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
                                 <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
                             `).join('') : ''}
                         </select>
                     ` : criteria.VARTYPE === "BOOLEAN" ? `
-                        <select class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <select class="criteria-values form-control" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                             <option value="">-- Select --</option>
                             <option value="1">True</option>
                             <option value="0">False</option>
                         </select>
                     ` : criteria.VARTYPE === "DATE" ? `
-                        <input type="date" class="criteria-values-date form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <input type="date" class="criteria-values-date form-control" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                     ` : criteria.VARTYPE === "NUMERIC" ? `
-                        <input type="number" step="any" class="criteria-values-number form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <input type="number" step="any" class="criteria-values-number form-control" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                     ` : `
-                        <input type="text" class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+                        <input type="text" class="criteria-values form-control" name="${prefix}[${criteria.ID}][value]" id="${prefix}-crit-${criteria.ID}-value">
                     `}
-            </div>
+                </div>
         </div>
-    `).join('');
+        `).join('');
+    }
+
+    const criteriaEntryOptions = generateCriteriaHtml(dunningCriteria, operatorOptions, 'entry');
+    const criteriaExitOptions = generateCriteriaHtml(dunningCriteria, operatorOptions, 'exit');
+
+    // let criteriaOptions = Object.values(dunningCriteria).map(criteria => `
+    //     <div class="row mb-1" data-id="${criteria.ID}">
+    //         <div class="col-1 d-flex align-items-center">
+    //             <input type="checkbox" class="crit-enable-checkbox" name="criteria[${criteria.ID}][enable]" id="crit-${criteria.ID}"/>
+    //         </div>
+    //         <div class="col-3 d-flex align-items-center">
+    //             ${criteria.DISPLAY} 
+    //         </div>
+    //         <div class="col-3 d-flex align-items-center">
+    //             <select class="" class="crit-operators-select" name="criteria[${criteria.ID}][option]" id="crit-${criteria.ID}-option">
+    //                 <option value="">-- Select operator --</option>
+    //                 ${operatorOptions}
+    //             </select>
+    //         </div>
+    //         <div class="col-4">
+    //             ${criteria.VARTYPE === "SELECTION" ? `
+    //                 <select class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //                     <option value="">-- Select option --</option>
+    //                     ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
+    //                         <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
+    //                     `).join('') : ''}
+    //                 </select>
+    //             ` : criteria.VARTYPE === "MULTI_SELECTION" ? `
+    //                 <select multiple class="criteria-values form-control no-add" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //                     <option value="">-- Select option --</option>
+    //                     ${criteria.SELECTION ? criteria.SELECTION.map(opt => `
+    //                         <option value="${opt.ID}">${opt.DISPLAY || opt.ID}</option>
+    //                     `).join('') : ''}
+    //                 </select>
+    //             ` : criteria.VARTYPE === "BOOLEAN" ? `
+    //                 <select class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //                     <option value="">-- Select --</option>
+    //                     <option value="1">True</option>
+    //                     <option value="0">False</option>
+    //                 </select>
+    //             ` : criteria.VARTYPE === "DATE" ? `
+    //                 <input type="date" class="criteria-values-date form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //             ` : criteria.VARTYPE === "NUMERIC" ? `
+    //                 <input type="number" step="any" class="criteria-values-number form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //             ` : `
+    //                 <input type="text" class="criteria-values form-control" name="criteria[${criteria.ID}][value]" id="crit-${criteria.ID}-value">
+    //             `}
+    //         </div>
+    //     </div>
+    // `).join('');
 
     const html = `
         <div class="edit-dunning-version-form-container">
@@ -112,8 +164,26 @@ export async function renderEditDunningVersionForm() {
                                 </div>
                             </div>
 
-                            <div id="campaign-criteria-container" class="col-6 d-none mb-1" >
-                                ${criteriaOptions}
+                            <div id="campaign-entry-criteria-container" class="col-12 d-none mb-1" >
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3>Choose entry criteria for all selected conditions met (AND)</h3>
+                                    </div>
+                                    <div class="col-6">
+                                        ${criteriaEntryOptions }
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div id="campaign-exit-criteria-container" class="col-12 d-none mb-1" >
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h3>Choose exit criteria for all selected conditions met (OR)</h3>
+                                    </div>
+                                    <div class="col-6">
+                                        ${criteriaExitOptions}
+                                    </div>
+                                </div>
                             </div>
 
                             <div id="edit-dunning-group-message" class="mb-3 error-message"></div>
@@ -150,7 +220,41 @@ export async function renderEditDunningVersionForm() {
                 createOnBlur: true,
             });
         });
-    }, 1500)
+
+        const selectDunningGroupVersionStatus = document.getElementById('dunning-group-version-status-edit');
+        const campaignEntryCriteriaContainer = document.getElementById('campaign-entry-criteria-container');
+        const campaignExitCriteriaContainer = document.getElementById('campaign-exit-criteria-container');
+        selectDunningGroupVersionStatus.addEventListener('change', (e) => {
+            const selectedValue = e.target.value;
+            console.log(selectedValue);
+
+            if (selectedValue == "1") {
+                campaignEntryCriteriaContainer.classList.remove("d-none");
+                campaignExitCriteriaContainer.classList.remove("d-none");
+            }
+            else {
+                campaignEntryCriteriaContainer.classList.add("d-none");
+                campaignExitCriteriaContainer.classList.add("d-none");
+            }
+        })
+
+        const btnCriteriaFormBack = document.getElementById("btn-criteria-form-back");
+        const dunningGroupVersionTableSection = document.getElementById('dunning-group-version-table-section');
+        const dunningVersionEditFormSection = document.getElementById('dunning-version-edit-form-section');
+
+        btnCriteriaFormBack.addEventListener("click", async(e) => {
+            e.preventDefault();
+            dunningGroupVersionTableSection.classList.remove("d-none");
+            dunningVersionEditFormSection.classList.add("d-none");
+
+            const dunningGroupId = document.getElementById("dunning-group-version-dunning-id-edit").value;
+            const dunningGroupPriority = document.getElementById("dunning-group-version-dunning-priority-edit").value;
+            const dunningGroupName = document.getElementById("dunning-version-form-edit-dunning-name").textContent;
+
+            
+            await loadDunningVersionTable(dunningGroupId, dunningGroupPriority, dunningGroupName, true);
+        });
+    }, 5000)
 
     return html;
 };

@@ -9,7 +9,7 @@ const columnsConfig = {
         { title: "Status", data: "status" }, // 2= Active, 9 = Deactivation
         { title: "Status Reason", data: "status_reason" }, // 2= Active, 9 = Deactivation
         { title: "Status Date", data: "status_date" },
-        { title: "MSISND", data: "msisdn" },
+        { title: "MSISDN", data: "msisdn" },
         { title: "IMSI", data: "imsi" },
         { title: "NAI", data: "nai" },
         { title: "Fixed-line No.", data: "fixed_line_no" },
@@ -51,27 +51,78 @@ const columnsConfig = {
 
 export async function getAccount(searchType, searchString) {
 
-
+    let part = 1;
     const body = {
+        part,
         searchType,
         searchString,
     };
 
     const url = `${API_BASE}/index.php?endpoint=acodeinq_2003`;
-    const responseJson = await fetchAPI(url, body);
-    
+    const responseJsonPart1 = await fetchAPI(url, body);
+    let safeInnerJsonPart1Json;
+    let safeInnerJsonPart2Json;
+    let safeInnerJsonPart3Json;
+
+    let acc_code, acc_id;
     // console.log(responseJson);
 
-    if ( responseJson.success == true ) {
+    if ( responseJsonPart1.success == true ) {
         // JSON.parse(responseJson.response);
 
-        let rawInnerJson = responseJson.response;
-        const safeInnerJson = rawInnerJson.replace(/("[\w_]+"\s*:\s*)([0-9]{15,})/g, '$1"$2"');
+        let rawInnerJson = responseJsonPart1.response;
+        const rawInnerJsonParse = JSON.parse(rawInnerJson);
 
-        return JSON.parse(safeInnerJson);
+        const safeInnerJsonPart1 = rawInnerJson.replace(/("[\w_]+"\s*:\s*)([0-9]{15,})/g, '$1"$2"');
+        safeInnerJsonPart1Json = JSON.parse(safeInnerJsonPart1);
+
+        acc_id = safeInnerJsonPart1Json.acc_id;
+        acc_code = safeInnerJsonPart1Json.acc_code;
+        console.log("acc_id: " + acc_id + " acc_code: " + acc_code);
+
+        part = 2;
+        const body2 = {
+            part,
+            acc_id,
+        };
+        const responseJsonPart2 = await fetchAPI(url, body2);
+
+        if ( responseJsonPart2.success == true ) {
+            const safeInnerJsonPart2 = responseJsonPart2.response;
+            safeInnerJsonPart2Json = JSON.parse(safeInnerJsonPart2);
+
+            part = 3;
+            const body3 = {
+                part,
+                acc_code,
+            };
+            const responseJsonPart3 = await fetchAPI(url, body3);
+
+            if ( responseJsonPart3.success == true ) {
+                const safeInnerJsonPart3 = responseJsonPart3.response;
+                safeInnerJsonPart3Json = JSON.parse(safeInnerJsonPart3);
+
+                const mergedAccountData = {
+                    ...safeInnerJsonPart1Json,
+                    ...safeInnerJsonPart2Json,
+                    ...safeInnerJsonPart3Json
+                };
+
+                return mergedAccountData;
+                        
+            }
+            else {
+                console.error("Failed to fetch account data part 3");
+            }
+        }
+        else {
+            console.error("Failed to fetch account data part 2");
+        }
+
+        // return JSON.parse(safeInnerJson);
     }
     else {
-        console.error("Failed to fetch account data");
+        console.error("Failed to fetch account data part 1");
     }
 }
 
